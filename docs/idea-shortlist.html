@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Idea Shortlist — TxODDS World Cup Hackathon</title>
+<style>
+  body { background:#0b0d0c; color:#f2f4f2; font:15px/1.6 system-ui, sans-serif; max-width:860px; margin:0 auto; padding:48px 24px; }
+  h1,h2 { font-family: Georgia, serif; font-weight:500; letter-spacing:-0.01em; }
+  h1 { font-size:34px; } h2 { font-size:22px; margin-top:40px; }
+  .dim { color:#9aa5a0; } .accent { color:#34e59b; }
+  .card { background:#111514; border:1px solid #232a27; border-radius:14px; padding:20px; margin:16px 0; }
+  table { width:100%; border-collapse:collapse; margin-top:12px; font-size:14px; }
+  td,th { border-top:1px solid #232a27; padding:8px 10px; text-align:left; color:#9aa5a0; }
+  th { color:#f2f4f2; }
+</style>
+</head>
+<body>
+<h1>Idea Shortlist — Prediction Markets &amp; Settlement</h1>
+<p class="dim">TxODDS World Cup hackathon · generated 2026-07-08 · constraint: no example-brief ideas (auto-markets, resolution UIs, market viewers, prediction AMMs, parametric props)</p>
+
+<div class="card">
+  <h2 style="margin-top:0">Winner: <span class="accent">ProofCast — Performance-Bonded Sports Forecasts</span></h2>
+  <p>Analysts stake USDC bonds behind sealed predictions; TxLINE Merkle proofs grade every pick on-chain; subscribers are auto-refunded when a bonded accuracy floor breaks.</p>
+  <p class="dim"><b>Why it wins:</b> attacks the multi-billion tipster-fraud market instead of building another betting UI. Unique in the track, legally cleaner (no wagering), impossible without neutral on-chain settlement, and a real startup wedge (verified forecaster reputation).</p>
+  <p class="dim"><b>Kill criteria:</b> analysts refuse to lock collateral → mitigate with free verified-record pages first, revenue-share bonds later.</p>
+  <table>
+    <tr><th>founder fit</th><th>mvp speed</th><th>distribution</th><th>market pull</th><th>revenue</th></tr>
+    <tr><td>3/3</td><td>2/3</td><td>3/3</td><td>3/3</td><td>3/3</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">Runner-up: LastFan — Trustless Survivor Pools</h2>
+  <p class="dim">Escrowed World Cup survivor pools with proof-driven eliminations. Lost on legal exposure (peer wagering pool) and proximity to the brief's example shapes. Scores: 2/3/2/2/1.</p>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">Runner-up: SettleNet — Settlement Clearinghouse SDK</h2>
+  <p class="dim">B2B settlement program + SDK other sports apps plug into. Lost on demo weakness in a 5-minute video, zero-customer infra risk, and sponsor-absorption risk. Scores: 2/1/1/1/2.</p>
+</div>
+
+<h2>Competitive landscape</h2>
+<table>
+  <tr><th>Player</th><th>Type</th><th>Why they have not won</th></tr>
+  <tr><td>Tipstrr / Blogabet</td><td>Web2 tipster platforms</td><td>Self-graded records; chronic fraud accusations; no collateral behind claims</td></tr>
+  <tr><td>Polymarket &amp; sports AMMs</td><td>Adjacent</td><td>Sell exposure, not verified expertise; banned example shape in this track</td></tr>
+  <tr><td>Other track entries (27+)</td><td>Direct</td><td>Clustering on the brief's own suggested ideas</td></tr>
+</table>
+
+<h2>Crypto necessity</h2>
+<p class="dim">Commit-reveal on Solana makes picks tamper-proof before kickoff; CPI into TxLINE <code>validate_stat</code> grades outcomes trustlessly; bonds and refunds live in PDAs no party can override. A platform grading its own tipsters is the fraud being solved — remove the chain and the product disappears.</p>
+</body>
+</html>
