@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getLiveMatches, HAS_TXLINE_KEY, MOCK_MATCHES } from "@/lib/txline";
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
