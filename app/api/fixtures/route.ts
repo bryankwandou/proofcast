@@ -6,11 +6,15 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     if (!HAS_TXLINE_KEY) {
-      return NextResponse.json({ source: "mock", matches: MOCK_MATCHES });
+      return NextResponse.json({ source: "mock", reason: "no key", matches: MOCK_MATCHES });
     }
     const matches = await getLiveMatches();
     return NextResponse.json({ source: "txline", matches });
-  } catch {
-    return NextResponse.json({ source: "mock", matches: MOCK_MATCHES });
+  } catch (e) {
+    return NextResponse.json({
+      source: "mock",
+      reason: e instanceof Error ? e.message : "unknown",
+      matches: MOCK_MATCHES,
+    });
   }
 }

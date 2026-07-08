@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ProofCast — Pitch Deck</title>
+<style>
+  :root {
+    --bg: #0b0d0c; --raise: #111514; --line: #232a27;
+    --ink: #f2f4f2; --dim: #9aa5a0; --accent: #34e59b; --danger: #f26d6d;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.55 "Inter", system-ui, sans-serif; }
+  .slide {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    max-width: 960px; margin: 0 auto; padding: 72px 40px; border-bottom: 1px solid var(--line);
+    page-break-after: always;
+  }
+  h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -0.02em; }
+  h1 { font-size: 56px; line-height: 1.05; }
+  h2 { font-size: 40px; line-height: 1.1; margin-bottom: 28px; }
+  .accent { color: var(--accent); font-style: italic; }
+  .dim { color: var(--dim); }
+  .kicker { font-family: ui-monospace, "JetBrains Mono", monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
+  .lead { font-size: 20px; color: var(--dim); max-width: 620px; margin-top: 20px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 8px; }
+  .card { background: var(--raise); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+  .card h3 { font-size: 17px; margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--dim); }
+  .big { font-family: ui-monospace, monospace; font-size: 44px; color: var(--accent); }
+  ul { padding-left: 20px; color: var(--dim); } li { margin: 10px 0; }
+  .mono { font-family: ui-monospace, monospace; font-size: 13px; }
+  .flow { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 12px; }
+  .step { background: var(--raise); border: 1px solid var(--line); border-radius: 999px; padding: 10px 20px; font-size: 14px; }
+  .arrow { color: var(--accent); }
+  footer { padding: 24px 40px; color: var(--dim); font-size: 12px; text-align: center; }
+  @media print { body { background: #0b0d0c !important; } .slide { min-height: 95vh; } }
+</style>
+</head>
+<body>
+
+<section class="slide">
+  <p class="kicker">ProofCast · TxODDS World Cup Hackathon · Prediction Markets and Settlement</p>
+  <h1>Anyone can claim a record.<br><span class="accent">Few can prove one.</span></h1>
+  <p class="lead">A marketplace for football forecasts where track records are graded by cryptographic proofs on Solana — never by the platform, never by the seller.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">01 · Problem</p>
+  <h2>Paid picks run on <span class="accent">unverifiable claims</span></h2>
+  <div class="cards">
+    <div class="card"><h3>Deleted losses</h3><p>Losing calls vanish from channels minutes after full time. Buyers only ever see the wins.</p></div>
+    <div class="card"><h3>Backdated wins</h3><p>Screenshots are produced after results are known. No timestamp anyone can check.</p></div>
+    <div class="card"><h3>Captured referees</h3><p>Rating platforms grade their own sellers. The referee works for one of the teams.</p></div>
+  </div>
+  <p class="lead">Result: honest analysts are priced like frauds, and buyers pay for confidence instead of skill.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">02 · Solution</p>
+  <h2>Seal it. Prove it. <span class="accent">Bond it.</span></h2>
+  <div class="flow">
+    <span class="step">Pick hashed + anchored on Solana before kickoff</span><span class="arrow">→</span>
+    <span class="step">Revealed + checked against the sealed hash</span><span class="arrow">→</span>
+    <span class="step">Graded by TxLINE Merkle proofs</span><span class="arrow">→</span>
+    <span class="step">Bond refunds subscribers if the floor breaks</span>
+  </div>
+  <ul>
+    <li>Every analyst stakes a <b style="color:var(--ink)">USDC bond</b> behind a published accuracy floor.</li>
+    <li>Settlement pulls <span class="mono">stat-validation</span> proofs from TxLINE; the <span class="mono">eventStatRoot</span> travels with every grade.</li>
+    <li>No user ever wagers on a match — the product is verified expertise, not exposure.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <p class="kicker">03 · Why now, why Solana</p>
+  <h2>The referee has to be <span class="accent">neutral</span></h2>
+  <ul>
+    <li>A Web2 platform grading its own tipsters is precisely the fraud being solved — the trust model requires settlement no party controls.</li>
+    <li>TxLINE anchors daily Merkle roots of World Cup data on Solana and exposes <span class="mono">validate_stat</span> for trustless outcome checks via CPI.</li>
+    <li>Commit-reveal, bond vaults, and automatic refunds are cheap, fast, and final on Solana.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <p class="kicker">04 · What is live today</p>
+  <h2>Working build, <span class="accent">live feed</span>, real receipts</h2>
+  <div class="cards">
+    <div class="card"><h3>Live TxLINE ingestion</h3><p>Fixtures, score updates, and real 1X2 prices from the World Cup feed, with model-based fallback pricing.</p></div>
+    <div class="card"><h3>Full pick lifecycle</h3><p>Seal → reveal → grade, each step signed onto devnet with explorer links in the UI.</p></div>
+    <div class="card"><h3>Proof-graded leaderboard</h3><p>Accuracy, flat-stake ROI, bond size and floor health per analyst — nothing self-reported.</p></div>
+    <div class="card"><h3>Replay settlement</h3><p>Judges can run the entire settlement path on any fixture even after the tournament ends.</p></div>
+  </div>
+  <p class="lead mono">proofcast-theta.vercel.app · github.com/nayrbryanGaming/proofcast</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">05 · Market</p>
+  <h2>Verified expertise is a <span class="accent">new asset</span></h2>
+  <div class="cards">
+    <div class="card"><p class="big">$4B+</p><p>estimated annual spend on paid sports picks across Telegram, X, and subscription platforms.</p></div>
+    <div class="card"><p class="big">0</p><p>existing platforms where the seller cannot fake, edit, or launder the track record.</p></div>
+    <div class="card"><p class="big">104</p><p>World Cup matches on one normalized feed — then every league TxLINE covers, then every sport.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">06 · Go to market</p>
+  <h2>The wedge: <span class="accent">"prove it or shut up"</span></h2>
+  <ul>
+    <li>Free verified-record pages tipsters link in their channel bios — reputational arms race does the marketing.</li>
+    <li>Accused-of-faking tipsters have the strongest incentive to adopt; honest ones gain a moat overnight.</li>
+    <li>Revenue: platform fee on subscriptions + bond yield; analysts keep the majority.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <p class="kicker">07 · Roadmap</p>
+  <h2>From hackathon to <span class="accent">settlement company</span></h2>
+  <ul>
+    <li><b style="color:var(--ink)">Now</b> — commit-reveal lifecycle with devnet receipts, live TxLINE grading, verified leaderboard.</li>
+    <li><b style="color:var(--ink)">Next 4 weeks</b> — Anchor settlement program: bond vault PDAs, subscriber registry, refund instruction gated by a <span class="mono">validate_stat</span> CPI.</li>
+    <li><b style="color:var(--ink)">Quarter</b> — USDC subscriptions, keeper bots on the SSE stream, ten design-partner tipsters, club leagues.</li>
+    <li><b style="color:var(--ink)">Year</b> — the credit rating agency for sports forecasting, across sports and languages.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <p class="kicker">08 · Ask</p>
+  <h1>Grade the graders.<br><span class="accent">ProofCast.</span></h1>
+  <p class="lead">Live build: proofcast-theta.vercel.app<br>Repository: github.com/nayrbryanGaming/proofcast<br>Track: Prediction Markets and Settlement — TxODDS World Cup</p>
+</section>
+
+<footer>ProofCast — built on TxLINE data with Merkle-proof settlement on Solana devnet.</footer>
+</body>
+</html>
