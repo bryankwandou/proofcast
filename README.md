@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ProofCast
 
-## Getting Started
+**Forecasts with collateral behind them.** Football analysts seal their predictions before kickoff, stake a USDC bond behind a public accuracy floor, and get graded by TxLINE Merkle proofs on Solana — never by the platform.
 
-First, run the development server:
+Built for the TxODDS World Cup hackathon, *Prediction Markets and Settlement* track on Superteam Earn.
+
+## The problem
+
+Paid football picks are a large market run on unverifiable claims. Sellers delete losing calls, backdate winners, and screenshot slips after results are known. Rating platforms grade their own sellers, so the referee works for one of the teams. Honest analysts get priced like frauds because buyers cannot tell the difference.
+
+## How ProofCast removes the trust
+
+1. **Seal.** A pick (analyst, fixture, selection, odds) is hashed with a private salt; the hash is anchored in a Solana devnet transaction before kickoff. Provably exists, provably unreadable, provably unedited.
+2. **Grade by proof.** After the match, the pick is revealed, checked against its sealed hash, and scored against TxLINE score data. The settlement path pulls the Merkle stat-validation receipt (`GET /api/scores/stat-validation`) and records the `eventStatRoot` with the grade.
+3. **Bond the claim.** Each analyst locks a USDC bond behind an accuracy floor. If proof-graded accuracy breaks the floor, subscribers are refunded from the bond — enforced by settlement logic, not support tickets.
+
+No user ever wagers on a match. The funds at risk are analyst bonds and subscription fees — a service-level agreement, not a bet.
+
+## TxLINE endpoints used
+
+- `GET /api/fixtures/snapshot` — full World Cup fixture list
+- `GET /api/scores/snapshot/{fixtureId}` — score updates per fixture
+- `GET /api/odds/snapshot/{fixtureId}` — 1X2 price history (milliunit prices)
+- `GET /api/scores/stat-validation` — Merkle proof material for settlement receipts
+- Devnet validation program: `6pW64gN1s2uqjHkn1unFeEjAwJkPGHoppGvS715wyP2J` (validate_stat CPI target for the Anchor settlement engine on the roadmap)
+
+## Stack
+
+Next.js 16 (App Router) · Tailwind v4 · framer-motion · @solana/web3.js · TxLINE devnet feed.
+
+## Run it
 
 ```bash
+npm install
+cp .env.example .env.local   # add your TxLINE key
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Without a key the app falls back to demo fixtures, so every flow stays testable.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Repository map
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `lib/protocol.ts` — commit-reveal, grading, and accuracy math
+- `lib/txline.ts` — TxLINE client (fixtures, scores, odds, auth)
+- `lib/solana.ts` — devnet receipt writer (commit / reveal / grade events)
+- `app/api/*` — fixtures proxy, pick lifecycle endpoints
+- `docs/ROADMAP.md` — the full 0 → MVP → startup checklist
+- `docs/SUBMISSION.md` — hackathon submission notes and demo script
