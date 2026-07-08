@@ -13,7 +13,8 @@ import fs from "fs";
 // timeline on Solana Explorer. The TxLINE validation program lives at:
 export const TXLINE_PROGRAM_DEVNET = "6pW64gN1s2uqjHkn1unFeEjAwJkPGHoppGvS715wyP2J";
 
-const MEMO_PROGRAM = new PublicKey("MemoSq4gqABAXKb96qnH8TySNcWxMyWCqXgDLGmfcHr");
+// Memo v1 — the memo build deployed on devnet (v2 id is absent there).
+const MEMO_PROGRAM = new PublicKey("Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo");
 const RPC = process.env.SOLANA_RPC_URL ?? "https://api.devnet.solana.com";
 
 let _keypair: Keypair | null = null;
