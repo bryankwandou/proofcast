@@ -2,8 +2,19 @@
 
 import { use, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Lock, CheckCircle2, XCircle, ExternalLink, LoaderCircle, FileCheck2 } from "lucide-react";
+import { Lock, CheckCircle2, XCircle, ExternalLink, LoaderCircle, FileCheck2, ShieldCheck } from "lucide-react";
 import type { Pick } from "@/lib/protocol";
+
+type OnChainCheck = {
+  valid: boolean;
+  fixtureValid: boolean;
+  program: string;
+  rootsPda: string | null;
+  statKey: number;
+  statValue: number;
+  logs?: string[];
+  error?: string;
+};
 
 const explorer = (sig: string) => `https://explorer.solana.com/tx/${sig}?cluster=devnet`;
 
@@ -15,6 +26,20 @@ export default function PickPage({ params }: { params: Promise<{ id: string }> }
   const [error, setError] = useState<string | null>(null);
   const [home, setHome] = useState(2);
   const [away, setAway] = useState(1);
+  const [check, setCheck] = useState<OnChainCheck | null>(null);
+  const [checking, setChecking] = useState(false);
+
+  async function runOnChainCheck() {
+    if (!pick) return;
+    setChecking(true);
+    setCheck(null);
+    try {
+      const r = await fetch(`/api/verify?fixtureId=${pick.fixtureId}&seq=latest&statKey=1`);
+      setCheck(await r.json());
+    } finally {
+      setChecking(false);
+    }
+  }
 
   async function load() {
     const d = await fetch("/api/picks").then((r) => r.json());
@@ -30,10 +55,19 @@ export default function PickPage({ params }: { params: Promise<{ id: string }> }
     setGrading(true);
     setError(null);
     try {
+      // Client-sealed picks: the reveal material (salt + selection) lives in
+      // this browser only, and is handed over at grading time.
+      let reveal: { salt?: string; selection?: string } = {};
+      try {
+        const stored = localStorage.getItem(`proofcast:${id}`);
+        if (stored) reveal = JSON.parse(stored);
+      } catch {
+        reveal = {};
+      }
       const res = await fetch(`/api/picks/${id}/grade`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ demoScore: { home, away } }),
+        body: JSON.stringify({ ...reveal, demoScore: { home, away } }),
       });
       const d = await res.json();
       if (!res.ok) setError(d.error ?? "grading failed");
@@ -76,7 +110,7 @@ export default function PickPage({ params }: { params: Promise<{ id: string }> }
       title: "Graded against TxLINE",
       done: pick.status === "won" || pick.status === "lost",
       body: pick.finalScore
-        ? `Final ${pick.finalScore.home}-${pick.finalScore.away} → ${pick.status === "won" ? "correct" : "missed"}${pick.proofRoot ? ` · Merkle root ${String(pick.proofRoot).slice(0, 18)}…` : ""}`
+        ? `Final ${pick.finalScore.home}-${pick.finalScore.away} → ${pick.status === "won" ? "correct" : "missed"}${pick.simulated ? " · simulated score (feed had no result)" : ""}${pick.proofRoot ? ` · Merkle root ${String(pick.proofRoot).slice(0, 18)}…` : ""}`
         : "Waiting for a verified final score.",
       tx: pick.gradeTx,
       ts: null,
@@ -127,6 +161,59 @@ export default function PickPage({ params }: { params: Promise<{ id: string }> }
             </div>
           </motion.div>
         ))}
+      </div>
+
+      <div className="mt-10 rounded-2xl border hairline bg-raise p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="flex items-center gap-2 font-medium">
+              <ShieldCheck size={18} className="text-accent" /> Check gate: run TxLINE&apos;s program yourself
+            </h2>
+            <p className="mt-1 max-w-lg text-sm text-dim">
+              This executes the <span className="font-mono text-xs">validate_stat</span> instruction
+              on Solana devnet with this fixture&apos;s Merkle proof material. The program — not
+              ProofCast — walks the proof against the daily root stored on-chain.
+            </p>
+          </div>
+          <button
+            onClick={runOnChainCheck}
+            disabled={checking}
+            className="inline-flex items-center gap-2 rounded-full border border-accent/50 px-5 py-2.5 text-sm text-accent transition-colors hover:bg-accent/10 disabled:opacity-60"
+          >
+            {checking && <LoaderCircle className="animate-spin" size={14} />}
+            Run on-chain check
+          </button>
+        </div>
+        {check && (
+          <div className="mt-4 rounded-xl border hairline bg-bg p-4">
+            <div className="flex flex-wrap gap-2 text-xs">
+              <span className={`rounded-full border px-3 py-1 ${check.fixtureValid ? "border-accent/40 text-accent" : "hairline text-dim"}`}>
+                fixture proof vs on-chain root: {check.fixtureValid ? "PASSED" : "not proven"}
+              </span>
+              <span className={`rounded-full border px-3 py-1 ${check.valid ? "border-accent/40 text-accent" : "border-amber/40 text-amber"}`}>
+                stat-level check: {check.valid ? "PASSED" : check.error ?? "failed"}
+              </span>
+            </div>
+            {check.rootsPda && (
+              <p className="mt-3 font-mono text-[11px] text-dim">
+                program {pick ? "" : ""}{check.program.slice(0, 8)}… · daily roots PDA{" "}
+                <a
+                  className="text-accent hover:underline"
+                  href={`https://explorer.solana.com/address/${check.rootsPda}?cluster=devnet`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {check.rootsPda.slice(0, 8)}…{check.rootsPda.slice(-6)}
+                </a>
+              </p>
+            )}
+            {check.logs && check.logs.length > 0 && (
+              <pre className="mt-3 overflow-x-auto rounded-lg border hairline p-3 font-mono text-[11px] leading-relaxed text-dim">
+                {check.logs.join("\n")}
+              </pre>
+            )}
+          </div>
+        )}
       </div>
 
       {pick.status === "sealed" && (

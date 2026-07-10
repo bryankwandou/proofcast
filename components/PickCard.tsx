@@ -28,8 +28,20 @@ export default function PickCard({ pick, analystHandle }: { pick: Pick; analystH
             {pick.finalScore ? ` · final ${pick.finalScore.home}-${pick.finalScore.away}` : ""}
           </p>
         </div>
-        <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs ${m.cls}`}>
-          <m.Icon size={13} /> {m.label}
+        <span className="flex items-center gap-2">
+          {pick.demo && (
+            <span className="rounded-full border hairline px-2.5 py-1 text-[10px] uppercase tracking-wider text-dim" title="Seeded history shown for illustration — receipts begin at commit">
+              demo
+            </span>
+          )}
+          {pick.simulated && (
+            <span className="rounded-full border border-amber/40 px-2.5 py-1 text-[10px] uppercase tracking-wider text-amber" title="Graded with a user-supplied score because the feed had no result">
+              simulated
+            </span>
+          )}
+          <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs ${m.cls}`}>
+            <m.Icon size={13} /> {m.label}
+          </span>
         </span>
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] text-dim">

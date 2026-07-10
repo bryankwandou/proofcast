@@ -133,10 +133,10 @@ export function HowItWorks() {
 }
 
 // ── Stats band ───────────────────────────────────────────────────────────────
-export function StatsBand({ picks, bonded }: { picks: number; bonded: number }) {
+export function StatsBand({ picks }: { picks: number }) {
   const stats = [
-    { label: "Picks sealed on devnet", value: picks, suffix: "" },
-    { label: "USDC bonded by analysts", value: bonded, suffix: "" },
+    { label: "Forecasts on the public ledger", value: picks, suffix: "" },
+    { label: "On-chain receipts per graded pick", value: 3, suffix: "" },
     { label: "Matches on the TxLINE feed", value: 104, suffix: "" },
     { label: "Self-graded records allowed", value: 0, suffix: "" },
   ];

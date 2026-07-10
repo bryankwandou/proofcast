@@ -38,21 +38,34 @@ export default function MatchesPage() {
     if (!active) return;
     setSealing(true);
     try {
-      const odds = active.odds[sel];
+      const odds = active.odds[sel] || 2.0;
+      const analystId = "a-tunde";
+
+      // Seal locally: the hash is computed in the browser and the salt never
+      // leaves this device until reveal. The server receives only the hash.
+      const saltBytes = new Uint8Array(16);
+      crypto.getRandomValues(saltBytes);
+      const salt = Array.from(saltBytes, (b) => b.toString(16).padStart(2, "0")).join("");
+      const payload = `${analystId}|${active.id}|${sel}|${odds.toFixed(2)}|${salt}`;
+      const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(payload));
+      const commitHash = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
+
       const res = await fetch("/api/picks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          analystId: "a-tunde",
+          analystId,
           fixtureId: active.id,
           fixtureLabel: `${active.homeTeam.name} vs ${active.awayTeam.name}`,
-          selection: sel,
-          oddsAtCommit: odds || 2.0,
+          commitHash,
+          oddsAtCommit: odds,
           kickoff: active.startTime,
           reasoning,
         }),
       });
       const d = await res.json();
+      // Reveal material stays local until the match ends.
+      localStorage.setItem(`proofcast:${d.pick.id}`, JSON.stringify({ salt, selection: sel }));
       setResult({ id: d.pick.id, hash: d.pick.commitHash, explorer: d.explorer });
     } finally {
       setSealing(false);

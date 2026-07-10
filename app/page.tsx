@@ -11,14 +11,13 @@ import {
 export default function Home() {
   const rows = leaderboard();
   const picks = allPicks();
-  const bonded = rows.reduce((s, r) => s + r.analyst.bondUsdc, 0);
 
   return (
     <>
       <Hero />
       <Ticker picks={picks.slice(0, 10)} />
       <HowItWorks />
-      <StatsBand picks={picks.length} bonded={bonded} />
+      <StatsBand picks={picks.length} />
       <LeaderboardPreview rows={rows} />
       <ClosingCta />
     </>
