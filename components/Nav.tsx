@@ -9,6 +9,7 @@ const links = [
   { href: "/analysts", label: "Analysts" },
   { href: "/picks", label: "Picks" },
   { href: "/how-it-works", label: "Protocol" },
+  { href: "/verify", label: "Verify" },
 ];
 
 export default function Nav() {

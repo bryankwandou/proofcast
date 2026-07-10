@@ -29,6 +29,10 @@ export type Pick = {
   finalScore?: { home: number; away: number } | null;
   demo?: boolean;      // seeded history shown for illustration — no receipts claimed
   simulated?: boolean; // graded with a user-supplied score because the feed had none
+  // Result of executing TxLINE's validate_stat on devnet at grading time.
+  // fixtureValid = the fixture's Merkle proof verified against the on-chain
+  // daily root; valid = the full stat-level predicate also passed.
+  onChainCheck?: { fixtureValid: boolean; valid: boolean; rootsPda: string | null } | null;
 };
 
 export type Analyst = {

@@ -52,10 +52,15 @@ export async function POST(
     score = null;
   }
   if (!score && body?.demoScore) {
-    score = {
-      home: Math.max(0, Number(body.demoScore.home) || 0),
-      away: Math.max(0, Number(body.demoScore.away) || 0),
-    };
+    const home = Number(body.demoScore.home);
+    const away = Number(body.demoScore.away);
+    if (!Number.isInteger(home) || !Number.isInteger(away) || home < 0 || away < 0 || home > 15 || away > 15) {
+      return NextResponse.json(
+        { error: "demoScore must be whole goals between 0 and 15" },
+        { status: 422 }
+      );
+    }
+    score = { home, away };
     simulated = true;
   }
   if (!score) {
@@ -65,21 +70,21 @@ export async function POST(
     );
   }
 
-  // Attach the Merkle validation receipt for feed-backed grades.
+  // Settlement gate for feed-backed grades: execute TxLINE's validate_stat
+  // program on devnet with the fixture's Merkle proof material. The grade is
+  // only marked proof-backed if the program itself verifies the fixture proof
+  // against the daily root stored on-chain.
   let proofRoot: string | null = null;
+  let onChainCheck: { fixtureValid: boolean; valid: boolean; rootsPda: string | null } | null = null;
   if (!simulated) {
     try {
-      const base = process.env.TXLINE_BASE_URL ?? "https://txline-dev.txodds.com/api";
-      const res = await fetch(
-        `${base}/scores/stat-validation?fixtureId=${pick.fixtureId}&seq=1&statKey=1`,
-        { headers: { "X-Api-Token": process.env.TXLINE_API_KEY ?? "" } }
-      );
-      if (res.ok) {
-        const v = await res.json();
-        proofRoot = v?.eventStatRoot ?? null;
-      }
+      const [{ verifyStatOnChain, fetchValidation }] = await Promise.all([import("@/lib/onchain")]);
+      const v = await fetchValidation(pick.fixtureId, 1, 1);
+      proofRoot = v ? Buffer.from(v.eventStatRoot).toString("hex") : null;
+      const check = await verifyStatOnChain(pick.fixtureId, 1, 1);
+      onChainCheck = { fixtureValid: check.fixtureValid, valid: check.valid, rootsPda: check.rootsPda };
     } catch {
-      proofRoot = null;
+      onChainCheck = null;
     }
   }
 
@@ -95,7 +100,8 @@ export async function POST(
     result: grade,
     score: `${score.home}-${score.away}`,
     source: simulated ? "simulated" : "txline",
-    ...(proofRoot ? { root: proofRoot } : {}),
+    ...(proofRoot ? { root: proofRoot.slice(0, 16) } : {}),
+    ...(onChainCheck ? { chk: onChainCheck.fixtureValid ? "fixture-pass" : "unproven" } : {}),
   });
 
   updatePick(id, {
@@ -107,6 +113,7 @@ export async function POST(
     revealTx: revealReceipt?.signature ?? null,
     gradeTx: gradeReceipt?.signature ?? null,
     proofRoot,
+    onChainCheck,
   });
 
   return NextResponse.json({ pick: pickById(id) });
