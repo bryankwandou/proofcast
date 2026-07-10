@@ -12,7 +12,9 @@ export type Pick = {
   analystId: string;
   fixtureId: string;
   fixtureLabel: string;      // "Argentina vs France"
-  selection: PickSelection;
+  // Null while a client-sealed pick is still hidden — the server learns the
+  // selection only at reveal, when it can be checked against the sealed hash.
+  selection: PickSelection | null;
   oddsAtCommit: number;      // decimal odds captured at commit time
   reasoning: string;
   committedAt: string;       // ISO
@@ -25,6 +27,8 @@ export type Pick = {
   gradeTx?: string | null;
   proofRoot?: string | null; // eventStatRoot from TxLINE stat-validation
   finalScore?: { home: number; away: number } | null;
+  demo?: boolean;      // seeded history shown for illustration — no receipts claimed
+  simulated?: boolean; // graded with a user-supplied score because the feed had none
 };
 
 export type Analyst = {
@@ -54,15 +58,23 @@ export function newSalt(): string {
   return randomBytes(16).toString("hex");
 }
 
-// Verify a revealed pick matches its sealed commitment.
-export function verifyReveal(pick: Pick): boolean {
+// Verify a revealed pick matches its sealed commitment. For client-sealed
+// picks the server never saw the salt or the selection, so the revealer
+// must supply both and they must reproduce the sealed hash exactly.
+export function verifyReveal(
+  pick: Pick,
+  reveal?: { salt?: string; selection?: PickSelection }
+): boolean {
+  const salt = reveal?.salt || pick.salt;
+  const selection = reveal?.selection ?? pick.selection;
+  if (!salt || !selection) return false;
   const payload = canonicalPayload({
     analystId: pick.analystId,
     fixtureId: pick.fixtureId,
-    selection: pick.selection,
+    selection,
     oddsAtCommit: pick.oddsAtCommit,
   });
-  return commitHashFor(payload, pick.salt) === pick.commitHash;
+  return commitHashFor(payload, salt) === pick.commitHash;
 }
 
 // Grade a revealed pick against a final score.

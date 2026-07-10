@@ -12,7 +12,7 @@ const sections = [
   {
     n: "02",
     title: "Sealed commitments",
-    body: `Before kickoff, an analyst's pick is reduced to a canonical string (analyst, fixture, selection, odds), hashed with a private salt, and the hash is anchored in a Solana devnet transaction. From that moment the pick can be proven to exist but cannot be read, edited, or deleted. Timestamped by the chain, not by us.`,
+    body: `Before kickoff, an analyst's pick is reduced to a canonical string (analyst, fixture, selection, odds) and hashed with a random salt — in the analyst's own browser. The server receives only the hash, which is then anchored in a Solana devnet transaction. The selection and the salt stay on the analyst's device until reveal, so the platform is structurally unable to read a pick before the match ends, and the chain — not us — supplies the timestamp.`,
   },
   {
     n: "03",

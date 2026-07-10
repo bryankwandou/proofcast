@@ -49,7 +49,7 @@ function seedPick(
   analystId: string,
   fixtureId: string,
   fixtureLabel: string,
-  selection: Pick["selection"],
+  selection: NonNullable<Pick["selection"]>,
   odds: number,
   kickoff: string,
   status: Pick["status"],
@@ -75,7 +75,9 @@ function seedPick(
     commitTx: null,
     revealTx: null,
     gradeTx: null,
-    proofRoot: status === "won" || status === "lost" ? `0x${commitHashFor(payload, `${salt}-root`).slice(0, 40)}` : null,
+    // Seed history predates the receipt layer — no proof material is faked for it.
+    proofRoot: null,
+    demo: true,
   };
 }
 
