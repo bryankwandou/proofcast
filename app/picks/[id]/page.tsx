@@ -110,7 +110,7 @@ export default function PickPage({ params }: { params: Promise<{ id: string }> }
       title: "Graded against TxLINE",
       done: pick.status === "won" || pick.status === "lost",
       body: pick.finalScore
-        ? `Final ${pick.finalScore.home}-${pick.finalScore.away} → ${pick.status === "won" ? "correct" : "missed"}${pick.simulated ? " · simulated score (feed had no result)" : ""}${pick.proofRoot ? ` · Merkle root ${String(pick.proofRoot).slice(0, 18)}…` : ""}`
+        ? `Final ${pick.finalScore.home}-${pick.finalScore.away} → ${pick.status === "won" ? "correct" : "missed"}${pick.simulated ? " · simulated score (feed had no result)" : ""}${pick.onChainCheck?.fixtureValid ? " · validate_stat: fixture proof PASSED on devnet" : ""}${pick.proofRoot ? ` · Merkle root ${String(pick.proofRoot).slice(0, 18)}…` : ""}`
         : "Waiting for a verified final score.",
       tx: pick.gradeTx,
       ts: null,

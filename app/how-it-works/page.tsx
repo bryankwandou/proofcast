@@ -17,7 +17,7 @@ const sections = [
   {
     n: "03",
     title: "Settlement by proof, not by platform",
-    body: `When the match ends, the pick is revealed and re-hashed — any mismatch voids it. The result comes from the TxLINE feed, whose score snapshots are committed to daily Merkle roots on Solana. Our settlement path fetches the stat-validation proof (GET /api/scores/stat-validation) and records the eventStatRoot alongside the grade, so every graded pick carries a receipt that traces back to the on-chain root. The validation program lives at ${TXLINE_PROGRAM_DEVNET} on devnet, and the on-chain settlement engine CPIs into its validate_stat instruction to confirm outcomes before any funds move.`,
+    body: `When the match ends, the pick is revealed and re-hashed — any mismatch voids it. The result comes from the TxLINE feed, whose score snapshots are committed to daily Merkle roots on Solana. At grading time, settlement executes the validate_stat instruction of the program at ${TXLINE_PROGRAM_DEVNET} on devnet with the fixture's Merkle proof material: the program — not ProofCast — walks the proof against the on-chain daily root, and a grade is only marked proof-backed when that check passes. You can run the exact same check yourself on the Verify page.`,
   },
   {
     n: "04",
@@ -27,7 +27,7 @@ const sections = [
   {
     n: "05",
     title: "What is on devnet today, and what comes next",
-    body: `The build you are looking at anchors commit, reveal, and grade events as signed devnet transactions and attaches TxLINE Merkle roots to every graded pick. The Anchor settlement program — bond vault PDA, subscriber registry, refund instruction gated by a validate_stat CPI — is specified in docs/ROADMAP.md and is the next milestone. Nothing in the product depends on trusting ProofCast: that is the point.`,
+    body: `The build you are looking at anchors commit, reveal, and grade events as signed devnet transactions, executes TxLINE's validate_stat program as a settlement gate on every feed-backed grade, and exposes a public verification console where anyone can rerun that check. The remaining milestone — an Anchor program holding the bond vault PDA and paying refunds through a validate_stat CPI, so the money path is as trustless as the grading path — is specified in docs/ROADMAP.md. Nothing in the product depends on trusting ProofCast: that is the point.`,
   },
 ];
 
