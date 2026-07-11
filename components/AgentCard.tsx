@@ -1,6 +1,7 @@
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Flame } from "lucide-react";
 import type { Analyst, Pick } from "@/lib/protocol";
 import { accuracyOf } from "@/lib/protocol";
+import { xpOf, rankProgress, streaks } from "@/lib/gamefi";
 
 // Agent identity: every analyst renders as a touchline agent — a crest and
 // kit derived deterministically from their wallet (same wallet, same colors,
@@ -73,21 +74,9 @@ export function Crest({ wallet, size = 56 }: { wallet: string; size?: number }) 
   );
 }
 
-// ── Rank & XP: earned from proof-graded picks only ────────────────────────────
-// XP = graded volume × quality. Wins at honest odds earn more than favorites;
-// nothing is purchasable and demo history earns nothing.
-export function xpOf(picks: Pick[]): number {
-  return picks
-    .filter((p) => !p.demo && (p.status === "won" || p.status === "lost"))
-    .reduce((xp, p) => xp + 10 + (p.status === "won" ? Math.round(15 * Math.min(p.oddsAtCommit, 4)) : 0), 0);
-}
-
-export function rankOf(graded: number, accuracy: number): string {
-  if (graded >= 20 && accuracy >= 0.65) return "Director";
-  if (graded >= 10 && accuracy >= 0.6) return "Chief Scout";
-  if (graded >= 5) return "Analyst";
-  return "Scout";
-}
+// XP and ranks live in lib/gamefi.ts. Re-export xpOf so existing imports from
+// this module keep working.
+export { xpOf } from "@/lib/gamefi";
 
 // ── Form guide: last five graded results, newest first ────────────────────────
 export function FormGuide({ picks }: { picks: Pick[] }) {
@@ -119,7 +108,9 @@ export function FormGuide({ picks }: { picks: Pick[] }) {
 // ── The card ──────────────────────────────────────────────────────────────────
 export default function AgentCard({ analyst, picks }: { analyst: Analyst; picks: Pick[] }) {
   const stats = accuracyOf(picks);
-  const rank = rankOf(stats.graded, stats.accuracy);
+  const xp = xpOf(picks);
+  const { current, next, pct } = rankProgress(xp);
+  const { current: streak } = streaks(picks);
   const floorHealthy = stats.graded === 0 || stats.accuracy >= analyst.accuracyFloor;
   const kit = kitFor(analyst.wallet);
 
@@ -135,8 +126,13 @@ export default function AgentCard({ analyst, picks }: { analyst: Analyst; picks:
           <div className="flex flex-wrap items-center gap-2.5">
             <h1 className="font-display text-3xl tracking-tight">{analyst.name}</h1>
             <span className="rounded-full border border-accent/40 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-accent">
-              {rank}
+              {current.name}
             </span>
+            {streak >= 2 && (
+              <span className="inline-flex items-center gap-1 rounded-full border border-flood/40 px-2.5 py-0.5 font-mono text-[10px] text-flood">
+                <Flame size={11} /> {streak} in a row
+              </span>
+            )}
           </div>
           <p className="mt-1 text-sm text-dim">
             @{analyst.handle} · on the touchline since {analyst.joined}
@@ -144,6 +140,19 @@ export default function AgentCard({ analyst, picks }: { analyst: Analyst; picks:
           <div className="mt-3 flex flex-wrap items-center gap-4 text-sm">
             <span className="text-dim">Form</span>
             <FormGuide picks={picks} />
+          </div>
+          {/* Rank progress — the bar only ever fills with graded picks. */}
+          <div className="mt-4 max-w-xs">
+            <div className="flex items-center justify-between font-mono text-[10px] text-dim">
+              <span>{xp.toLocaleString()} XP</span>
+              <span>{next ? `${next.name} at ${next.minXp}` : "max rank"}</span>
+            </div>
+            <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-chalk/40">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-accent to-flood"
+                style={{ width: `${Math.round(pct * 100)}%` }}
+              />
+            </div>
           </div>
         </div>
         <div className="text-right text-sm">

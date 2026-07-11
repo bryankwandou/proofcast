@@ -21,7 +21,7 @@ export function Hero() {
           className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border hairline bg-raise px-4 py-1.5 text-xs text-dim"
         >
           <span className="live-dot inline-block h-1.5 w-1.5 rounded-full bg-accent" />
-          Grading every World Cup pick with TxLINE Merkle proofs
+          The touchline where every call is on the record
         </motion.p>
         <motion.h1
           initial={{ opacity: 0, y: 28 }}
@@ -37,9 +37,9 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.15 }}
           className="mx-auto mt-6 max-w-xl text-lg text-dim"
         >
-          Football analysts seal their predictions before kickoff, put a USDC bond
-          behind a public accuracy floor, and let cryptographic proofs do the grading.
-          The platform never touches the result.
+          Football agents call their play before kickoff, stake a USDC bond behind a
+          public accuracy floor, and let cryptographic proofs do the grading. The
+          referee is the chain — never the platform.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -125,13 +125,13 @@ export function HowItWorks() {
       <FadeUp>
         <h2 className="font-display text-3xl tracking-tight sm:text-5xl">
           Tipster fraud is a market failure.<br />
-          <span className="italic text-dim">Settlement fixes it.</span>
+          <span className="italic text-dim">The whistle, the proof, the bond.</span>
         </h2>
       </FadeUp>
       <Stagger className="mt-12 grid gap-5 sm:grid-cols-3">
         {steps.map((s) => (
           <StaggerItem key={s.title}>
-            <TiltCard className="h-full rounded-2xl border hairline bg-raise p-6">
+            <TiltCard className="floodlit h-full rounded-2xl border hairline bg-raise p-6">
               <s.icon className="text-accent" size={22} />
               <h3 className="mt-4 text-lg font-medium">{s.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-dim">{s.body}</p>
@@ -221,10 +221,10 @@ export function ClosingCta() {
       <div className="mx-auto max-w-6xl px-5 py-24 text-center">
         <FadeUp>
           <h2 className="font-display mx-auto max-w-2xl text-4xl tracking-tight sm:text-5xl">
-            Post picks people can <span className="italic text-accent">check</span>, not just believe.
+            Call plays people can <span className="italic text-accent">check</span>, not just believe.
           </h2>
           <p className="mx-auto mt-4 max-w-md text-dim">
-            Seal a pick against a live World Cup fixture and watch the whole
+            Seal a play against a live World Cup fixture and watch the whole
             lifecycle — commit, reveal, grade — land on Solana devnet.
           </p>
           <Link

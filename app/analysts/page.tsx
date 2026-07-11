@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 import { allPicks, leaderboard, picksByAnalyst } from "@/lib/store";
-import { Crest, FormGuide, rankOf } from "@/components/AgentCard";
+import { Crest, FormGuide } from "@/components/AgentCard";
+import { xpOf, rankProgress } from "@/lib/gamefi";
 import { FadeUp, Stagger, StaggerItem } from "@/components/motion";
 
 export const metadata = { title: "League table — ProofCast" };
@@ -50,7 +51,7 @@ export default function AnalystsPage() {
       <Stagger className="mt-2 flex flex-col gap-2">
         {rows.map((r, i) => {
           const picks = picksByAnalyst(r.analyst.id);
-          const rank = rankOf(r.graded, r.accuracy);
+          const rank = rankProgress(xpOf(picks)).current.name;
           const relegation = !r.floorHealthy;
           return (
             <StaggerItem key={r.analyst.id}>
