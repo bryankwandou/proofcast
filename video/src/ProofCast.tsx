@@ -205,11 +205,92 @@ const Product: React.FC = () => {
           delay={82}
           icon={<Check size={26} color={C.accent} />}
           title="Graded against TxLINE"
-          body="Final 2–0 → correct · Merkle root attached"
+          body="Final 2–0 → correct · settlement gated by validate_stat on devnet"
           tx={RECEIPTS.grade}
           last
         />
       </div>
+    </Scene>
+  );
+};
+
+// ── Scene 4b — On-chain check gate (real program logs) ────────────────────────
+// These lines are the unedited devnet output of TxLINE's validate_stat
+// instruction, exactly as surfaced on proofcast-theta.vercel.app/verify.
+const GATE_LOGS = [
+  "$ validate_stat · 6pW64gN1…5wyP2J · devnet",
+  "Instruction: ValidateStat",
+  "Receive score stat validation request with predicate",
+  "Verify account integrity",
+  "Find valid on-chain root for interval 42",
+  "Perform fixture-level validation",
+  "Pass fixture-level validation",
+];
+
+const LogLine: React.FC<{ text: string; delay: number; pass?: boolean; cmd?: boolean }> = ({ text, delay, pass, cmd }) => {
+  const frame = useCurrentFrame();
+  const chars = Math.max(0, Math.floor((frame - delay) * 2.2));
+  const shown = text.slice(0, chars);
+  if (frame < delay) return <div style={{ height: 34 }} />;
+  return (
+    <div
+      style={{
+        fontFamily: mono,
+        fontSize: 22,
+        lineHeight: "34px",
+        color: pass ? C.accent : cmd ? C.ink : C.dim,
+        fontWeight: pass ? 600 : 400,
+      }}
+    >
+      {shown}
+      {chars < text.length && <span style={{ color: C.accent }}>▋</span>}
+    </div>
+  );
+};
+
+const CheckGate: React.FC = () => {
+  const badge = useEnter(150);
+  return (
+    <Scene durationInFrames={240} style={{ alignItems: "flex-start" }}>
+      <Kicker delay={6}>Don’t trust us — run the program</Kicker>
+      <Rise delay={12} style={{ marginBottom: 36 }}>
+        <h2 style={H(54)}>
+          Settlement is gated by TxLINE’s <span style={{ fontStyle: "italic", color: C.accent }}>validate_stat</span> on devnet
+        </h2>
+      </Rise>
+      <Rise delay={22} style={{ width: "100%", maxWidth: 1120 }}>
+        <div
+          style={{
+            backgroundColor: C.raise,
+            border: `1px solid ${C.line}`,
+            borderRadius: 20,
+            padding: "30px 36px",
+          }}
+        >
+          {GATE_LOGS.map((l, i) => (
+            <LogLine key={i} text={l} delay={30 + i * 16} cmd={i === 0} pass={l.startsWith("Pass")} />
+          ))}
+          <div
+            style={{
+              opacity: badge,
+              transform: `translateY(${interpolate(badge, [0, 1], [12, 0])}px)`,
+              marginTop: 24,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              border: `1px solid ${C.accentDim}`,
+              backgroundColor: `${C.accent}14`,
+              borderRadius: 999,
+              padding: "12px 24px",
+              fontFamily: mono,
+              fontSize: 21,
+              color: C.accent,
+            }}
+          >
+            <ShieldCheck size={20} /> fixture proof vs on-chain root: PASSED · anyone can rerun this at /verify
+          </div>
+        </div>
+      </Rise>
     </Scene>
   );
 };
@@ -334,13 +415,16 @@ export const ProofCastVideo: React.FC = () => {
         <Sequence from={510} durationInFrames={270} premountFor={30}>
           <Product />
         </Sequence>
-        <Sequence from={780} durationInFrames={210} premountFor={30}>
+        <Sequence from={780} durationInFrames={240} premountFor={30}>
+          <CheckGate />
+        </Sequence>
+        <Sequence from={1020} durationInFrames={210} premountFor={30}>
           <Leaderboard />
         </Sequence>
-        <Sequence from={990} durationInFrames={180} premountFor={30}>
+        <Sequence from={1230} durationInFrames={180} premountFor={30}>
           <Stats />
         </Sequence>
-        <Sequence from={1170} durationInFrames={150} premountFor={30}>
+        <Sequence from={1410} durationInFrames={150} premountFor={30}>
           <Cta />
         </Sequence>
       </AbsoluteFill>
@@ -348,4 +432,4 @@ export const ProofCastVideo: React.FC = () => {
   );
 };
 
-export const MASTER_DURATION = 1320; // 44s @ 30fps
+export const MASTER_DURATION = 1560; // 52s @ 30fps
