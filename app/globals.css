@@ -1,25 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0b0d0c;
-  --bg-raise: #111514;
-  --line: #232a27;
-  --ink: #f2f4f2;
-  --ink-dim: #9aa5a0;
-  --accent: #34e59b;
+  /* Stadium-night palette: pitch blacks with a green undertone, chalk-line
+     hairlines, floodlight lime for spectacle, VAR amber, card red. */
+  --bg: #070a08;
+  --bg-raise: #0d1210;
+  --line: #1f2925;
+  --chalk: #2c3833;
+  --ink: #f2f5f2;
+  --ink-dim: #93a29b;
+  --accent: #52f2a5;
   --accent-dim: #1d8a5e;
-  --danger: #f26d6d;
-  --amber: #e5c069;
+  --flood: #d6ff4b;
+  --danger: #f25a5a;
+  --amber: #e8c257;
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-raise: var(--bg-raise);
   --color-line: var(--line);
+  --color-chalk: var(--chalk);
   --color-ink: var(--ink);
   --color-dim: var(--ink-dim);
   --color-accent: var(--accent);
   --color-accent-dim: var(--accent-dim);
+  --color-flood: var(--flood);
   --color-danger: var(--danger);
   --color-amber: var(--amber);
   --font-sans: var(--font-inter);
@@ -59,8 +65,47 @@ body {
   background-size: 56px 56px;
 }
 
+/* Pitch backdrop: chalk halfway line + center circle under a floodlight
+   vignette. Sits behind hero content; intentionally faint. */
+.pitch-bg {
+  position: relative;
+  isolation: isolate;
+}
+.pitch-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    /* halfway line */
+    linear-gradient(to bottom, transparent calc(50% - 1px), rgb(255 255 255 / 0.05) calc(50% - 1px), rgb(255 255 255 / 0.05) calc(50% + 1px), transparent calc(50% + 1px)),
+    /* center circle */
+    radial-gradient(circle at 50% 50%, transparent 118px, rgb(255 255 255 / 0.05) 118px, rgb(255 255 255 / 0.05) 120px, transparent 120px),
+    /* mowing stripes */
+    repeating-linear-gradient(to right, rgb(82 242 165 / 0.016) 0 90px, transparent 90px 180px);
+}
+.pitch-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -10%, rgb(214 255 75 / 0.05), transparent 60%),
+    radial-gradient(ellipse 120% 80% at 50% 110%, rgb(0 0 0 / 0.55), transparent 60%);
+  pointer-events: none;
+}
+
 .glow {
-  box-shadow: 0 0 80px -20px rgb(52 229 155 / 0.35);
+  box-shadow: 0 0 80px -20px rgb(82 242 165 / 0.35);
+}
+
+/* floodlight hover for interactive cards */
+.floodlit {
+  transition: box-shadow 200ms ease, border-color 200ms ease;
+}
+.floodlit:hover {
+  border-color: var(--accent-dim);
+  box-shadow: 0 0 60px -24px rgb(82 242 165 / 0.45);
 }
 
 @keyframes marquee {
@@ -80,4 +125,10 @@ body {
 }
 .live-dot {
   animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee { animation: none; }
+  .live-dot { animation: none; }
+  html { scroll-behavior: auto; }
 }
