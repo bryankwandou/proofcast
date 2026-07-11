@@ -66,11 +66,12 @@ export default function VerifyPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-16">
-      <h1 className="flex items-center gap-3 font-display text-4xl tracking-tight sm:text-5xl">
-        <ShieldCheck className="text-accent" size={36} /> Verification console
+      <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber">VAR review room</p>
+      <h1 className="mt-2 flex items-center gap-3 font-display text-4xl tracking-tight sm:text-5xl">
+        <ShieldCheck className="text-accent" size={36} /> Check it yourself
       </h1>
       <p className="mt-4 leading-relaxed text-dim">
-        Don&apos;t take our word for anything. Pick a fixture and this page will execute the{" "}
+        Don&apos;t take our word for anything. Pick a fixture and this room will execute the{" "}
         <span className="font-mono text-sm">validate_stat</span> instruction of TxLINE&apos;s
         program on Solana devnet with that fixture&apos;s Merkle proof material. The program walks
         the proof up to the daily root already stored on-chain — if the data had been altered
@@ -114,12 +115,12 @@ export default function VerifyPage() {
           className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-[#04140d] transition-transform hover:scale-[1.02] disabled:opacity-60"
         >
           {running && <LoaderCircle className="animate-spin" size={14} />}
-          {running ? "Executing on devnet…" : "Run on-chain check"}
+          {running ? "Reviewing on devnet…" : "Send it to VAR"}
         </button>
       </div>
 
       {result && (
-        <div className="mt-6 rounded-2xl border hairline bg-raise p-5">
+        <div className={`mt-6 rounded-2xl border bg-raise p-5 ${result.fixtureValid ? "var-pass border-accent/40" : "hairline"}`}>
           <div className="flex flex-wrap gap-2 text-xs">
             <span
               className={`rounded-full border px-3 py-1 ${

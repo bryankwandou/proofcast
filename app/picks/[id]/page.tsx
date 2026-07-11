@@ -120,9 +120,10 @@ export default function PickPage({ params }: { params: Promise<{ id: string }> }
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-16">
-      <h1 className="font-display text-4xl tracking-tight">{pick.fixtureLabel}</h1>
+      <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-dim">Match replay</p>
+      <h1 className="mt-2 font-display text-4xl tracking-tight">{pick.fixtureLabel}</h1>
       <p className="mt-2 text-dim">
-        Pick <span className="font-mono text-sm">{pick.id}</span> · committed{" "}
+        Pick <span className="font-mono text-sm">{pick.id}</span> · sealed{" "}
         {new Date(pick.committedAt).toLocaleString()}
       </p>
 
@@ -153,9 +154,9 @@ export default function PickPage({ params }: { params: Promise<{ id: string }> }
                   href={explorer(t.tx)}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-1 inline-flex items-center gap-1 text-xs text-accent hover:underline"
+                  className="mt-1.5 inline-flex items-center gap-1.5 rounded border border-accent/30 bg-accent/5 px-2 py-0.5 font-mono text-[11px] text-accent hover:bg-accent/10"
                 >
-                  Devnet receipt <ExternalLink size={11} />
+                  devnet receipt · {t.tx.slice(0, 6)}…{t.tx.slice(-4)} <ExternalLink size={10} />
                 </a>
               )}
             </div>
