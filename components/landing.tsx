@@ -10,8 +10,8 @@ import type { Pick } from "@/lib/protocol";
 // ── Hero ─────────────────────────────────────────────────────────────────────
 export function Hero() {
   return (
-    <section className="grid-bg relative overflow-hidden border-b hairline">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[radial-gradient(60%_50%_at_50%_0%,rgb(52_229_155/0.09),transparent)]" />
+    <section className="pitch-bg relative overflow-hidden border-b hairline">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[radial-gradient(60%_50%_at_50%_0%,rgb(82_242_165/0.09),transparent)]" />
       <div className="mx-auto max-w-6xl px-5 pb-20 pt-24 text-center sm:pb-28 sm:pt-32">
         <motion.p
           initial={{ opacity: 0 }}
