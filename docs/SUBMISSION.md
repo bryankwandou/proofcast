@@ -13,11 +13,13 @@ The brief's example ideas (auto-markets, resolution UIs, market viewers, predict
 ## Core functionality shipped
 
 - Live TxLINE World Cup feed: fixtures, scores, real 1X2 odds (milliunit parsing) with Poisson fallback pricing
+- **Client-side sealing**: the salt is generated and the commitment hashed in the analyst's browser (Web Crypto); the server only ever receives the hash, so the platform is structurally unable to read a pick before reveal
 - Commit-reveal pick lifecycle with devnet receipts for every step (memo transactions by a protocol signer)
-- Settlement path that fetches `GET /api/scores/stat-validation` and stores the `eventStatRoot` with each grade
+- **On-chain check gate**: at grading time, settlement executes the `validate_stat` instruction of TxLINE's devnet program with the fixture's real Merkle proof material (IDL fetched from the chain, `daily_scores_roots` PDA derived per epoch day); a grade is only marked proof-backed when the program itself verifies the proof against the on-chain daily root
+- **Public verification console at `/verify`**: anyone can pick any fixture and rerun the identical on-chain check; the program's unedited logs are the receipt
 - Proof-graded leaderboard: accuracy, flat-stake ROI, bond size, floor health
 - Analyst track-record pages — the shareable artifact tipsters put in their channel bios
-- Demo settlement mode so judges can run the full seal → reveal → grade flow on any fixture even after the tournament ends
+- Demo settlement mode (bounded, permanently labeled `simulated`) so judges can run the full seal → reveal → grade flow on any fixture even after the tournament ends
 
 ## TxLINE endpoints used
 
@@ -27,7 +29,7 @@ The brief's example ideas (auto-markets, resolution UIs, market viewers, predict
 | `/api/scores/snapshot/{id}` | score updates, final results |
 | `/api/odds/snapshot/{id}` | 1X2 prices captured at commit time |
 | `/api/scores/stat-validation` | Merkle proof material attached to grades |
-| Devnet program `6pW64gN1s2uqjHkn1unFeEjAwJkPGHoppGvS715wyP2J` | validate_stat CPI target for the Anchor settlement engine (phase 4 of docs/ROADMAP.md) |
+| Devnet program `6pW64gN1s2uqjHkn1unFeEjAwJkPGHoppGvS715wyP2J` | `validate_stat` executed today as the settlement gate and on `/verify`; CPI target for the Anchor bond-vault engine next (phase 4 of docs/ROADMAP.md) |
 
 ## Demo video script (≤5 min)
 
