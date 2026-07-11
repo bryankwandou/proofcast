@@ -115,6 +115,19 @@ Each day is a working session on this branch; ship = commit + preview deploy.
 - [ ] Performance budget check; bundle audit
 - [ ] Merge to main + production deploy + announcement assets
 
+## Progress log
+
+Days 1–14 landed on `redesign/agentic-football` across this build:
+stadium-night tokens + pitch backdrop; broadcast score-bug and sealed-wire
+ticker; deterministic agent crests/kits/form/rank; league table with a live
+refund zone; play-calling seal flow; VAR review room at `/verify`; replay-style
+pick timeline; a single `lib/gamefi.ts` engine (XP, five ranks, streaks) with a
+rank-progress bar cross-page; a receipt-backed badge engine + trophy cabinet; a
+matchday sealing-window clock + off-matchday empty states; an animated nav pill;
+broadcast-voice landing copy; and a frozen-but-provable season archive at
+`/seasons`. Every route returns 200 and the production build is green. `main`
+stays frozen as the hackathon submission until after 19 July.
+
 ## Ground rules
 
 - The submission build on `main` is untouchable until results/deadline pass.

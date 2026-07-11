@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import Logo from "./Logo";
 
 // Score-bug style live indicator: lights up when the TxLINE feed has a match
@@ -42,8 +43,9 @@ function LiveBadge() {
 }
 
 const links = [
-  { href: "/matches", label: "Matches" },
-  { href: "/analysts", label: "Analysts" },
+  { href: "/matches", label: "Matchday" },
+  { href: "/analysts", label: "Table" },
+  { href: "/seasons", label: "Seasons" },
   { href: "/picks", label: "Picks" },
   { href: "/how-it-works", label: "Protocol" },
   { href: "/verify", label: "Verify" },
@@ -58,19 +60,27 @@ export default function Nav() {
           <Logo />
         </Link>
         <nav className="hidden items-center gap-1 sm:flex">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`rounded-full px-4 py-1.5 text-sm transition-colors ${
-                path?.startsWith(l.href)
-                  ? "bg-raise text-ink"
-                  : "text-dim hover:text-ink"
-              }`}
-            >
-              {l.label}
-            </Link>
-          ))}
+          {links.map((l) => {
+            const active = path?.startsWith(l.href);
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`relative rounded-full px-4 py-1.5 text-sm transition-colors ${
+                  active ? "text-ink" : "text-dim hover:text-ink"
+                }`}
+              >
+                {active && (
+                  <motion.span
+                    layoutId="nav-pill"
+                    className="absolute inset-0 -z-10 rounded-full bg-raise"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                {l.label}
+              </Link>
+            );
+          })}
         </nav>
         <div className="flex items-center gap-3">
           <LiveBadge />

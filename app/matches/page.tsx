@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Lock, ExternalLink, LoaderCircle } from "lucide-react";
 import type { TxMatch } from "@/lib/txline";
+import MatchdayClock from "@/components/MatchdayClock";
 
 type Sel = "home" | "draw" | "away";
 
@@ -88,9 +89,20 @@ export default function MatchesPage() {
         on-chain before anyone, including us, can read it.
       </p>
 
+      <div className="mt-8">
+        <MatchdayClock />
+      </div>
+
       {loading ? (
         <div className="mt-16 flex items-center gap-2 text-dim">
           <LoaderCircle className="animate-spin" size={18} /> Loading the feed…
+        </div>
+      ) : matches.length === 0 ? (
+        <div className="mt-16 rounded-2xl border hairline bg-raise/40 p-12 text-center">
+          <p className="font-display text-2xl text-dim">The stadium is quiet</p>
+          <p className="mt-2 text-sm text-dim">
+            No fixtures on the feed right now. The lights come back up on the next matchday.
+          </p>
         </div>
       ) : (
         <>

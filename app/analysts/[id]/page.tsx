@@ -3,6 +3,7 @@ import { analystById, picksByAnalyst } from "@/lib/store";
 import { accuracyOf } from "@/lib/protocol";
 import PickCard from "@/components/PickCard";
 import AgentCard, { xpOf } from "@/components/AgentCard";
+import TrophyCabinet from "@/components/TrophyCabinet";
 import { FadeUp, Stagger, StaggerItem } from "@/components/motion";
 
 export default async function AnalystPage({ params }: { params: Promise<{ id: string }> }) {
@@ -40,6 +41,10 @@ export default async function AnalystPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
       </FadeUp>
+
+      <div className="mt-12">
+        <TrophyCabinet picks={picks} />
+      </div>
 
       <h2 className="font-display mt-12 text-2xl">Pick history</h2>
       <p className="mt-1 text-sm text-dim">
