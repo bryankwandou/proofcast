@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import { ShieldCheck } from "lucide-react";
 import { analystById, picksByAnalyst } from "@/lib/store";
 import { accuracyOf } from "@/lib/protocol";
 import PickCard from "@/components/PickCard";
+import AgentCard, { xpOf } from "@/components/AgentCard";
 import { FadeUp, Stagger, StaggerItem } from "@/components/motion";
 
 export default async function AnalystPage({ params }: { params: Promise<{ id: string }> }) {
@@ -11,35 +11,15 @@ export default async function AnalystPage({ params }: { params: Promise<{ id: st
   if (!analyst) notFound();
   const picks = picksByAnalyst(analyst.id);
   const stats = accuracyOf(picks);
-  const floorHealthy = stats.graded === 0 || stats.accuracy >= analyst.accuracyFloor;
+  const xp = xpOf(picks);
 
   return (
     <div className="mx-auto max-w-4xl px-5 py-16">
       <FadeUp>
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h1 className="font-display text-4xl tracking-tight">{analyst.name}</h1>
-            <p className="mt-1 text-dim">@{analyst.handle} · publishing since {analyst.joined}</p>
-            <p className="mt-3 max-w-lg text-sm text-dim">{analyst.bio}</p>
-          </div>
-          <div className="rounded-2xl border hairline bg-raise p-5 text-sm">
-            <div className="flex items-center gap-2 text-accent">
-              <ShieldCheck size={16} />
-              <span className="font-mono">{analyst.bondUsdc.toLocaleString()} USDC</span> bonded
-            </div>
-            <p className="mt-1 text-xs text-dim">
-              accuracy floor {(analyst.accuracyFloor * 100).toFixed(0)}% ·{" "}
-              <span className={floorHealthy ? "text-accent" : "text-danger"}>
-                {floorHealthy ? "intact" : "breached — refunds active"}
-              </span>
-            </p>
-            <p className="mt-1 text-xs text-dim">
-              {analyst.subscribers.toLocaleString()} subscribers · {analyst.monthlyPriceUsdc} USDC/mo
-            </p>
-          </div>
-        </div>
+        <AgentCard analyst={analyst} picks={picks} />
+        <p className="mt-4 max-w-lg text-sm text-dim">{analyst.bio}</p>
 
-        <div className="mt-8 grid grid-cols-3 gap-4 rounded-2xl border hairline bg-raise p-5 text-center">
+        <div className="mt-8 grid grid-cols-2 gap-4 rounded-2xl border hairline bg-raise p-5 text-center sm:grid-cols-4">
           <div>
             <p className="font-mono text-2xl text-accent">{(stats.accuracy * 100).toFixed(0)}%</p>
             <p className="text-xs text-dim">proof-graded accuracy</p>
@@ -53,6 +33,10 @@ export default async function AnalystPage({ params }: { params: Promise<{ id: st
               {stats.roi >= 0 ? "+" : ""}{(stats.roi * 100).toFixed(1)}%
             </p>
             <p className="text-xs text-dim">flat-stake ROI</p>
+          </div>
+          <div>
+            <p className="font-mono text-2xl text-flood">{xp.toLocaleString()}</p>
+            <p className="text-xs text-dim">XP — proof-graded only</p>
           </div>
         </div>
       </FadeUp>

@@ -6,6 +6,7 @@ import { ArrowRight, Lock, FileCheck2, Coins, ShieldCheck } from "lucide-react";
 import { CountUp, FadeUp, Stagger, StaggerItem, TiltCard } from "./motion";
 import type { LeaderboardRow } from "@/lib/store";
 import type { Pick } from "@/lib/protocol";
+import { Crest } from "./AgentCard";
 
 // ── Hero ─────────────────────────────────────────────────────────────────────
 export function Hero() {
@@ -65,25 +66,35 @@ export function Hero() {
   );
 }
 
-// ── Sealed-pick ticker ───────────────────────────────────────────────────────
+// ── Sealed-pick ticker — broadcast lower-third crawl ─────────────────────────
 export function Ticker({ picks }: { picks: Pick[] }) {
   const items = [...picks, ...picks];
   return (
-    <div className="overflow-hidden border-b hairline bg-raise/40 py-3">
-      <div className="animate-marquee flex w-max gap-8">
-        {items.map((p, i) => (
-          <span key={`${p.id}-${i}`} className="flex items-center gap-2 whitespace-nowrap font-mono text-xs text-dim">
-            <span
-              className={
-                p.status === "won" ? "text-accent" : p.status === "lost" ? "text-danger" : "text-amber"
-              }
-            >
-              {p.status === "sealed" ? "SEALED" : p.status.toUpperCase()}
+    <div className="flex items-stretch border-b hairline">
+      <div className="z-10 flex shrink-0 items-center gap-2 border-r hairline bg-raise px-4 py-3">
+        <span className="live-dot inline-block h-1.5 w-1.5 rounded-full bg-accent" />
+        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink">
+          Sealed wire
+        </span>
+      </div>
+      <div className="relative flex-1 overflow-hidden bg-raise/40 py-3">
+        <div className="animate-marquee flex w-max gap-10 pl-6">
+          {items.map((p, i) => (
+            <span key={`${p.id}-${i}`} className="flex items-center gap-2 whitespace-nowrap font-mono text-xs text-dim">
+              <span
+                className={
+                  p.status === "won" ? "text-accent" : p.status === "lost" ? "text-danger" : "text-amber"
+                }
+              >
+                {p.status === "sealed" ? "SEALED" : p.status.toUpperCase()}
+              </span>
+              {p.fixtureLabel}
+              <span className="opacity-50">sha256:{p.commitHash.slice(0, 12)}…</span>
             </span>
-            {p.fixtureLabel}
-            <span className="opacity-50">sha256:{p.commitHash.slice(0, 12)}…</span>
-          </span>
-        ))}
+          ))}
+        </div>
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-bg to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-bg to-transparent" />
       </div>
     </div>
   );
@@ -175,6 +186,7 @@ export function LeaderboardPreview({ rows }: { rows: LeaderboardRow[] }) {
             >
               <div className="flex items-center gap-4">
                 <span className="font-mono text-sm text-dim">{String(i + 1).padStart(2, "0")}</span>
+                <Crest wallet={r.analyst.wallet} size={26} />
                 <div>
                   <p className="font-medium">
                     {r.analyst.name} <span className="text-dim">@{r.analyst.handle}</span>

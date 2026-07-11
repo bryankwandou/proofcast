@@ -127,8 +127,26 @@ body {
   animation: pulse-dot 1.6s ease-in-out infinite;
 }
 
+/* VAR pass: a single floodlight sweep across the review panel */
+@keyframes var-sweep {
+  from { background-position: -120% 0; }
+  to { background-position: 220% 0; }
+}
+.var-pass {
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgb(82 242 165 / 0.08) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: var-sweep 1.6s ease-out 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee { animation: none; }
   .live-dot { animation: none; }
+  .var-pass { animation: none; }
   html { scroll-behavior: auto; }
 }

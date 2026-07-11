@@ -81,10 +81,11 @@ export default function MatchesPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-16">
-      <h1 className="font-display text-4xl tracking-tight sm:text-5xl">World Cup fixtures</h1>
+      <h1 className="font-display text-4xl tracking-tight sm:text-5xl">Matchday board</h1>
       <p className="mt-3 max-w-xl text-dim">
         Straight from the TxLINE feed{source === "txline" ? "" : " (demo data while the feed is unreachable)"}.
-        Pick a fixture, choose a side, and your prediction is hashed and anchored before anyone can see it.
+        Call your play before the whistle — it is hashed on your device and anchored
+        on-chain before anyone, including us, can read it.
       </p>
 
       {loading ? (
@@ -109,9 +110,16 @@ export default function MatchesPage() {
                       key={m.id}
                       whileHover={{ y: -3 }}
                       onClick={() => setActive(m)}
-                      className="rounded-2xl border hairline bg-raise p-5 text-left transition-colors hover:border-accent-dim"
+                      className="floodlit rounded-2xl border hairline bg-raise p-5 text-left"
                     >
-                      <p className="text-xs text-dim">{m.stage}</p>
+                      <p className="flex items-center justify-between text-xs text-dim">
+                        <span>{m.stage}</span>
+                        {m.status === "pre" && (
+                          <span className="font-mono">
+                            KO {new Date(m.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          </span>
+                        )}
+                      </p>
                       <div className="mt-2 flex items-center justify-between">
                         <span className="font-medium">{m.homeTeam.name}</span>
                         <span className="font-mono text-lg">{m.status === "pre" ? "–" : m.score.home}</span>
@@ -120,10 +128,10 @@ export default function MatchesPage() {
                         <span className="font-medium">{m.awayTeam.name}</span>
                         <span className="font-mono text-lg">{m.status === "pre" ? "–" : m.score.away}</span>
                       </div>
-                      <div className="mt-3 flex justify-between font-mono text-xs text-dim">
-                        <span>1 {m.odds.home.toFixed(2)}</span>
-                        <span>X {m.odds.draw.toFixed(2)}</span>
-                        <span>2 {m.odds.away.toFixed(2)}</span>
+                      <div className="mt-3 grid grid-cols-3 gap-1 rounded-lg bg-chalk/30 p-1 font-mono text-xs text-dim">
+                        <span className="rounded px-2 py-1 text-center">1 {m.odds.home.toFixed(2)}</span>
+                        <span className="rounded px-2 py-1 text-center">X {m.odds.draw.toFixed(2)}</span>
+                        <span className="rounded px-2 py-1 text-center">2 {m.odds.away.toFixed(2)}</span>
                       </div>
                     </motion.button>
                   ))}
@@ -153,12 +161,13 @@ export default function MatchesPage() {
             >
               {!result ? (
                 <>
-                  <h3 className="font-display text-2xl">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-dim">Call the play</p>
+                  <h3 className="font-display mt-1 text-2xl">
                     {active.homeTeam.name} vs {active.awayTeam.name}
                   </h3>
                   <p className="mt-1 text-sm text-dim">
-                    Your selection is hashed with a private salt. Only the hash goes
-                    on-chain before kickoff.
+                    Hashed on this device with a private salt. Only the hash goes
+                    on-chain before the whistle — the play stays in your pocket.
                   </p>
                   <div className="mt-5 grid grid-cols-3 gap-2">
                     {(
@@ -192,7 +201,7 @@ export default function MatchesPage() {
                     className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3 font-medium text-[#04140d] transition-transform hover:scale-[1.02] disabled:opacity-60"
                   >
                     {sealing ? <LoaderCircle className="animate-spin" size={16} /> : <Lock size={16} />}
-                    {sealing ? "Anchoring on devnet…" : "Seal this pick"}
+                    {sealing ? "Anchoring on devnet…" : "Seal the play"}
                   </button>
                 </>
               ) : (
@@ -205,8 +214,13 @@ export default function MatchesPage() {
                   >
                     <Lock className="text-accent" size={24} />
                   </motion.div>
-                  <h3 className="font-display mt-4 text-2xl">Pick sealed</h3>
-                  <p className="mt-2 break-all font-mono text-xs text-dim">sha256:{result.hash}</p>
+                  <h3 className="font-display mt-4 text-2xl">Play sealed</h3>
+                  <div className="mt-3 rounded-xl border border-accent/30 bg-bg p-3">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">Stadium screen</p>
+                    <p className="mt-1.5 break-all font-mono text-xs leading-relaxed text-ink">
+                      sha256:{result.hash}
+                    </p>
+                  </div>
                   {result.explorer ? (
                     <a
                       href={result.explorer}
