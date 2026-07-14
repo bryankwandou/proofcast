@@ -12,7 +12,7 @@ export default function Footer() {
           </p>
         </div>
         <div className="flex flex-col gap-1 text-sm text-dim">
-          <a className="hover:text-ink" href="https://github.com/nayrbryangaming/proofcast" target="_blank" rel="noreferrer">GitHub</a>
+          <a className="hover:text-ink" href="https://github.com/VincentiusBryanKwandou/proofcast" target="_blank" rel="noreferrer">GitHub</a>
           <a className="hover:text-ink" href="https://txline.txodds.com/documentation/quickstart" target="_blank" rel="noreferrer">TxLINE docs</a>
           <a className="hover:text-ink" href="https://explorer.solana.com/?cluster=devnet" target="_blank" rel="noreferrer">Solana Explorer</a>
         </div>
