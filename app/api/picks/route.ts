@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
 import { addPick, allPicks } from "@/lib/store";
+import { insertPick, listDbPicks } from "@/lib/db";
 import { canonicalPayload, commitHashFor, newSalt, Pick, PickSelection } from "@/lib/protocol";
 import { writeReceipt } from "@/lib/solana";
 
 export async function GET() {
-  return NextResponse.json({ picks: allPicks() });
+  // Real persisted picks first, then the seeded demo history beneath them.
+  const dbPicks = await listDbPicks();
+  const seen = new Set(dbPicks.map((p) => p.id));
+  const seeds = allPicks().filter((p) => !seen.has(p.id));
+  return NextResponse.json({ picks: [...dbPicks, ...seeds] });
 }
 
 // Seal a new pick. Two paths:
@@ -67,5 +72,6 @@ export async function POST(req: Request) {
     walletSig: typeof body.walletSig === "string" ? body.walletSig : null,
   };
   addPick(pick);
+  await insertPick(pick); // persist real picks so they survive and show for all
   return NextResponse.json({ pick, explorer: receipt?.explorer ?? null });
 }
