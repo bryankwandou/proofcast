@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Inter, Newsreader, JetBrains_Mono } from "next/font/google";
+import "flag-icons/css/flag-icons.min.css";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import ScoreBug from "@/components/ScoreBug";
 import Footer from "@/components/Footer";
+import { WalletRoot } from "@/components/WalletBar";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const newsreader = Newsreader({
@@ -28,10 +30,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${newsreader.variable} ${jetbrains.variable}`}>
       <body className="min-h-screen flex flex-col">
-        <Nav />
-        <ScoreBug />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <WalletRoot>
+          <Nav />
+          <ScoreBug />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </WalletRoot>
       </body>
     </html>
   );

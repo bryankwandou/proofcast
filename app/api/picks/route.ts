@@ -61,6 +61,10 @@ export async function POST(req: Request) {
     commitTx: receipt?.signature ?? null,
     status: "sealed",
     finalScore: null,
+    // Wallet identity: the connected wallet and its signature over the commit
+    // hash. Present when the user sealed with a wallet; null for demo/curl.
+    wallet: typeof body.wallet === "string" ? body.wallet : null,
+    walletSig: typeof body.walletSig === "string" ? body.walletSig : null,
   };
   addPick(pick);
   return NextResponse.json({ pick, explorer: receipt?.explorer ?? null });
