@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Lock, ExternalLink, LoaderCircle } from "lucide-react";
 import type { TxMatch } from "@/lib/txline";
 import MatchdayClock from "@/components/MatchdayClock";
+import { flagFor } from "@/lib/flags";
 
 type Sel = "home" | "draw" | "away";
 
@@ -133,11 +134,17 @@ export default function MatchesPage() {
                         )}
                       </p>
                       <div className="mt-2 flex items-center justify-between">
-                        <span className="font-medium">{m.homeTeam.name}</span>
+                        <span className="flex items-center gap-2 font-medium">
+                          <span className="text-xl leading-none">{flagFor(m.homeTeam.name)}</span>
+                          {m.homeTeam.name}
+                        </span>
                         <span className="font-mono text-lg">{m.status === "pre" ? "–" : m.score.home}</span>
                       </div>
                       <div className="mt-1 flex items-center justify-between">
-                        <span className="font-medium">{m.awayTeam.name}</span>
+                        <span className="flex items-center gap-2 font-medium">
+                          <span className="text-xl leading-none">{flagFor(m.awayTeam.name)}</span>
+                          {m.awayTeam.name}
+                        </span>
                         <span className="font-mono text-lg">{m.status === "pre" ? "–" : m.score.away}</span>
                       </div>
                       <div className="mt-3 grid grid-cols-3 gap-1 rounded-lg bg-chalk/30 p-1 font-mono text-xs text-dim">
