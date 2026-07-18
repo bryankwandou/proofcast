@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { flagFor } from "@/lib/flags";
+import { Flag } from "./Flag";
 
 // Broadcast score-bug strip: sits under the nav, shows what the TxLINE feed
 // is showing right now. Live matches lead with a red minute counter; today's
@@ -30,8 +30,8 @@ function Bug({ m }: { m: Match }) {
       href="/matches"
       className="floodlit flex shrink-0 items-center gap-2.5 rounded-lg border hairline bg-raise px-3.5 py-1.5 font-mono text-xs"
     >
-      <span className="flex items-center gap-1 text-ink">
-        <span className="text-sm leading-none">{flagFor(m.homeTeam.name)}</span>
+      <span className="flex items-center gap-1.5 text-ink">
+        <Flag name={m.homeTeam.name} className="!w-4 !h-3" />
         {code(m.homeTeam)}
       </span>
       {m.status === "pre" ? (
@@ -43,8 +43,8 @@ function Bug({ m }: { m: Match }) {
           {m.score.home}–{m.score.away}
         </span>
       )}
-      <span className="flex items-center gap-1 text-ink">
-        <span className="text-sm leading-none">{flagFor(m.awayTeam.name)}</span>
+      <span className="flex items-center gap-1.5 text-ink">
+        <Flag name={m.awayTeam.name} className="!w-4 !h-3" />
         {code(m.awayTeam)}
       </span>
       {live && (

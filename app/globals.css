@@ -144,9 +144,26 @@ body {
   animation: var-sweep 1.6s ease-out 1;
 }
 
+/* SVG flag chips: fixed 4:3 box, gentle broadcast wave */
+.flag-wave {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.125em;
+  background-size: cover;
+  background-position: center;
+  vertical-align: -0.15em;
+  animation: flag-wave 3.2s ease-in-out infinite;
+  transform-origin: left center;
+}
+@keyframes flag-wave {
+  0%, 100% { transform: perspective(60px) rotateY(0deg) skewX(0deg); }
+  50% { transform: perspective(60px) rotateY(-8deg) skewX(-2deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee { animation: none; }
   .live-dot { animation: none; }
   .var-pass { animation: none; }
+  .flag-wave { animation: none; }
   html { scroll-behavior: auto; }
 }

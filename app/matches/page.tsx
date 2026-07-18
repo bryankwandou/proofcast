@@ -3,13 +3,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Lock, ExternalLink, LoaderCircle } from "lucide-react";
+import { useProofWallet } from "@/components/WalletBar";
 import type { TxMatch } from "@/lib/txline";
 import MatchdayClock from "@/components/MatchdayClock";
-import { flagFor } from "@/lib/flags";
+import { Flag } from "@/components/Flag";
 
 type Sel = "home" | "draw" | "away";
 
 export default function MatchesPage() {
+  const { address, signCommit } = useProofWallet();
   const [matches, setMatches] = useState<TxMatch[]>([]);
   const [source, setSource] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -41,7 +43,9 @@ export default function MatchesPage() {
     setSealing(true);
     try {
       const odds = active.odds[sel] || 2.0;
-      const analystId = "a-tunde";
+      // Identity is the connected wallet, not a hardcoded label. Fall back to a
+      // demo id only when no wallet is connected.
+      const analystId = address ?? "a-tunde";
 
       // Seal locally: the hash is computed in the browser and the salt never
       // leaves this device until reveal. The server receives only the hash.
@@ -52,11 +56,21 @@ export default function MatchesPage() {
       const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(payload));
       const commitHash = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
 
+      // Bind identity to the pick: the wallet signs the exact commitment hash.
+      // Anyone can later verify this signature against the wallet's public key,
+      // proving *this* wallet — and no one else — authored the sealed pick.
+      let walletSig: string | null = null;
+      if (address) {
+        walletSig = await signCommit(commitHash);
+      }
+
       const res = await fetch("/api/picks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           analystId,
+          wallet: address ?? null,
+          walletSig,
           fixtureId: active.id,
           fixtureLabel: `${active.homeTeam.name} vs ${active.awayTeam.name}`,
           commitHash,
@@ -134,15 +148,15 @@ export default function MatchesPage() {
                         )}
                       </p>
                       <div className="mt-2 flex items-center justify-between">
-                        <span className="flex items-center gap-2 font-medium">
-                          <span className="text-xl leading-none">{flagFor(m.homeTeam.name)}</span>
+                        <span className="flex items-center gap-2.5 font-medium">
+                          <Flag name={m.homeTeam.name} />
                           {m.homeTeam.name}
                         </span>
                         <span className="font-mono text-lg">{m.status === "pre" ? "–" : m.score.home}</span>
                       </div>
                       <div className="mt-1 flex items-center justify-between">
-                        <span className="flex items-center gap-2 font-medium">
-                          <span className="text-xl leading-none">{flagFor(m.awayTeam.name)}</span>
+                        <span className="flex items-center gap-2.5 font-medium">
+                          <Flag name={m.awayTeam.name} />
                           {m.awayTeam.name}
                         </span>
                         <span className="font-mono text-lg">{m.status === "pre" ? "–" : m.score.away}</span>

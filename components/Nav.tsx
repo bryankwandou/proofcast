@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Logo from "./Logo";
+import { ConnectButton } from "./WalletBar";
 
 // Score-bug style live indicator: lights up when the TxLINE feed has a match
 // underway. Quiet the rest of the time — a LIVE badge that always shows is lying.
@@ -84,6 +85,7 @@ export default function Nav() {
         </nav>
         <div className="flex items-center gap-3">
           <LiveBadge />
+          <ConnectButton />
           <Link
             href="/matches"
             className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-[#04140d] transition-transform hover:scale-[1.03] active:scale-[0.98]"
