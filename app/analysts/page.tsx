@@ -61,7 +61,7 @@ export default function AnalystsPage() {
                   relegation ? "border-danger/40" : "hairline"
                 }`}
               >
-                <span className={`font-mono text-lg ${i === 0 ? "text-flood" : "text-dim"}`}>
+                <span className={`font-mono text-lg ${i === 0 ? "text-accent" : "text-dim"}`}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="flex min-w-0 items-center gap-3">

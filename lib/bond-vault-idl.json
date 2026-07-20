@@ -1,0 +1,605 @@
+{
+  "address": "6XGwWjKTTkWD6JcJQXGUeDexJfrY3Nv2gM4yjJs5jSNi",
+  "metadata": {
+    "name": "bond_vault",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "ProofCast Bond Vault — a trustless settlement engine that CPIs into TxLINE validate_stat"
+  },
+  "instructions": [
+    {
+      "name": "claim_earnings",
+      "docs": [
+        "Floor held: the agent withdraws the accumulated subscription fees."
+      ],
+      "discriminator": [
+        49,
+        99,
+        161,
+        170,
+        22,
+        233,
+        54,
+        140
+      ],
+      "accounts": [
+        {
+          "name": "agent",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "bond"
+          ]
+        },
+        {
+          "name": "bond",
+          "writable": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claim_refund",
+      "docs": [
+        "Floor broke: a subscriber reclaims their fee plus a pro-rata share of the",
+        "collateral, straight from the escrow. No platform in the loop."
+      ],
+      "discriminator": [
+        15,
+        16,
+        30,
+        161,
+        255,
+        228,
+        97,
+        60
+      ],
+      "accounts": [
+        {
+          "name": "subscriber",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "subscription"
+          ]
+        },
+        {
+          "name": "bond",
+          "writable": true,
+          "relations": [
+            "subscription"
+          ]
+        },
+        {
+          "name": "subscription",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "bond"
+              },
+              {
+                "kind": "account",
+                "path": "subscriber"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "open_bond",
+      "docs": [
+        "Agent opens a bond behind an accuracy floor and locks collateral (lamports)."
+      ],
+      "discriminator": [
+        104,
+        15,
+        47,
+        167,
+        89,
+        122,
+        159,
+        22
+      ],
+      "accounts": [
+        {
+          "name": "agent",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "bond",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "agent"
+              },
+              {
+                "kind": "arg",
+                "path": "season_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "season_id",
+          "type": {
+            "array": [
+              "u8",
+              16
+            ]
+          }
+        },
+        {
+          "name": "accuracy_floor_bps",
+          "type": "u16"
+        },
+        {
+          "name": "collateral_lamports",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "settle",
+      "docs": [
+        "Keeper settles the bond. `validate_ix_data` is the fully serialized",
+        "TxLINE `validate_stat` instruction, built off-chain from the same proof",
+        "material the app already fetches. We CPI into the TxLINE program with the",
+        "accounts passed in `remaining_accounts`; the settlement is only accepted",
+        "if that program returns success — the outcome is proven, not asserted.",
+        "",
+        "`settled_accuracy_bps` is the agent's proof-graded accuracy for the season",
+        "window; the status records whether it cleared the floor. The CPI is the",
+        "gate: without a passing proof, no branch of this instruction runs."
+      ],
+      "discriminator": [
+        175,
+        42,
+        185,
+        87,
+        144,
+        131,
+        102,
+        212
+      ],
+      "accounts": [
+        {
+          "name": "keeper",
+          "signer": true
+        },
+        {
+          "name": "bond",
+          "writable": true
+        },
+        {
+          "name": "txline_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "settled_accuracy_bps",
+          "type": "u16"
+        },
+        {
+          "name": "validate_ix_data",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "subscribe",
+      "docs": [
+        "A subscriber deposits a fee into the bond escrow. If the floor breaks they",
+        "reclaim it (plus a pro-rata slice of collateral) via `claim_refund`."
+      ],
+      "discriminator": [
+        254,
+        28,
+        191,
+        138,
+        156,
+        179,
+        183,
+        53
+      ],
+      "accounts": [
+        {
+          "name": "subscriber",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "bond",
+          "writable": true
+        },
+        {
+          "name": "subscription",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "bond"
+              },
+              {
+                "kind": "account",
+                "path": "subscriber"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "fee_lamports",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Bond",
+      "discriminator": [
+        224,
+        128,
+        48,
+        251,
+        182,
+        246,
+        111,
+        196
+      ]
+    },
+    {
+      "name": "Subscription",
+      "discriminator": [
+        64,
+        7,
+        26,
+        135,
+        102,
+        132,
+        98,
+        33
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "BondOpened",
+      "discriminator": [
+        144,
+        64,
+        233,
+        238,
+        81,
+        248,
+        153,
+        251
+      ]
+    },
+    {
+      "name": "BondSettled",
+      "discriminator": [
+        187,
+        150,
+        172,
+        212,
+        229,
+        119,
+        165,
+        123
+      ]
+    },
+    {
+      "name": "EarningsClaimed",
+      "discriminator": [
+        106,
+        170,
+        154,
+        105,
+        21,
+        43,
+        189,
+        97
+      ]
+    },
+    {
+      "name": "Refunded",
+      "discriminator": [
+        35,
+        103,
+        149,
+        246,
+        196,
+        123,
+        221,
+        99
+      ]
+    },
+    {
+      "name": "Subscribed",
+      "discriminator": [
+        135,
+        59,
+        105,
+        76,
+        190,
+        236,
+        138,
+        228
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidFloor",
+      "msg": "Accuracy floor must be between 0 and 10000 basis points"
+    },
+    {
+      "code": 6001,
+      "name": "ZeroAmount",
+      "msg": "Amount must be greater than zero"
+    },
+    {
+      "code": 6002,
+      "name": "BondNotOpen",
+      "msg": "Bond is not open for subscriptions"
+    },
+    {
+      "code": 6003,
+      "name": "AlreadySettled",
+      "msg": "Bond has already been settled"
+    },
+    {
+      "code": 6004,
+      "name": "ProofRejected",
+      "msg": "TxLINE validate_stat rejected the proof — settlement refused"
+    },
+    {
+      "code": 6005,
+      "name": "NotBreached",
+      "msg": "Bond floor was not breached"
+    },
+    {
+      "code": 6006,
+      "name": "NotHeld",
+      "msg": "Bond floor was not held"
+    },
+    {
+      "code": 6007,
+      "name": "AlreadyRefunded",
+      "msg": "This subscription was already refunded"
+    }
+  ],
+  "types": [
+    {
+      "name": "Bond",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "agent",
+            "type": "pubkey"
+          },
+          {
+            "name": "season_id",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "accuracy_floor_bps",
+            "type": "u16"
+          },
+          {
+            "name": "settled_accuracy_bps",
+            "type": "u16"
+          },
+          {
+            "name": "collateral_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "fees_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "subscriber_count",
+            "type": "u64"
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BondOpened",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bond",
+            "type": "pubkey"
+          },
+          {
+            "name": "agent",
+            "type": "pubkey"
+          },
+          {
+            "name": "accuracy_floor_bps",
+            "type": "u16"
+          },
+          {
+            "name": "collateral_lamports",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BondSettled",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bond",
+            "type": "pubkey"
+          },
+          {
+            "name": "settled_accuracy_bps",
+            "type": "u16"
+          },
+          {
+            "name": "floor_bps",
+            "type": "u16"
+          },
+          {
+            "name": "held",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EarningsClaimed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bond",
+            "type": "pubkey"
+          },
+          {
+            "name": "agent",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Refunded",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bond",
+            "type": "pubkey"
+          },
+          {
+            "name": "subscriber",
+            "type": "pubkey"
+          },
+          {
+            "name": "payout",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Subscribed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bond",
+            "type": "pubkey"
+          },
+          {
+            "name": "subscriber",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_lamports",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Subscription",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bond",
+            "type": "pubkey"
+          },
+          {
+            "name": "subscriber",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "refunded",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}

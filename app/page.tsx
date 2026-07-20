@@ -1,24 +1,30 @@
-import { allPicks, leaderboard } from "@/lib/store";
+import { allPicks } from "@/lib/store";
+import { standings, seasonSummary, ACTIVE_SEASON } from "@/lib/season";
 import {
   ClosingCta,
   Hero,
   HowItWorks,
-  LeaderboardPreview,
+  SeasonStandings,
   StatsBand,
   Ticker,
 } from "@/components/landing";
 
 export default function Home() {
-  const rows = leaderboard();
   const picks = allPicks();
+  const table = standings();
+  const summary = seasonSummary();
 
   return (
     <>
       <Hero />
       <Ticker picks={picks.slice(0, 10)} />
       <HowItWorks />
-      <StatsBand picks={picks.length} />
-      <LeaderboardPreview rows={rows} />
+      <StatsBand
+        picksTotal={summary.picksTotal}
+        graded={summary.graded}
+        proofBacked={summary.proofBacked}
+      />
+      <SeasonStandings table={table} season={ACTIVE_SEASON} />
       <ClosingCta />
     </>
   );

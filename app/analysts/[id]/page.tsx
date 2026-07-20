@@ -36,7 +36,7 @@ export default async function AnalystPage({ params }: { params: Promise<{ id: st
             <p className="text-xs text-dim">flat-stake ROI</p>
           </div>
           <div>
-            <p className="font-mono text-2xl text-flood">{xp.toLocaleString()}</p>
+            <p className="font-mono text-2xl text-accent">{xp.toLocaleString()}</p>
             <p className="text-xs text-dim">XP — proof-graded only</p>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Lock, CheckCircle2, XCircle, ExternalLink } from "lucide-react";
+import { Lock, CheckCircle2, XCircle, ExternalLink, PenLine } from "lucide-react";
 import type { Pick } from "@/lib/protocol";
 import { explorerTx } from "@/lib/solana";
 
@@ -29,9 +29,20 @@ export default function PickCard({ pick, analystHandle }: { pick: Pick; analystH
           </p>
         </div>
         <span className="flex items-center gap-2">
+          {!pick.demo && pick.commitTx && (
+            <a
+              href={explorerTx(pick.commitTx)}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-2.5 py-1 text-[10px] uppercase tracking-wider text-accent hover:bg-accent/20"
+              title="Real Solana devnet receipt. Click to open the anchored transaction in Solana Explorer."
+            >
+              <CheckCircle2 size={11} /> on-chain
+            </a>
+          )}
           {pick.demo && (
-            <span className="rounded-full border hairline px-2.5 py-1 text-[10px] uppercase tracking-wider text-dim" title="Seeded history shown for illustration — receipts begin at commit">
-              demo
+            <span className="rounded-full border hairline px-2.5 py-1 text-[10px] uppercase tracking-wider text-dim" title="Reference record from the pre-launch cohort. Live picks you seal carry full on-chain receipts.">
+              sample
             </span>
           )}
           {pick.simulated && (
@@ -58,6 +69,16 @@ export default function PickCard({ pick, analystHandle }: { pick: Pick; analystH
         )}
         {pick.proofRoot && <span title="TxLINE eventStatRoot">root:{String(pick.proofRoot).slice(0, 14)}…</span>}
       </div>
+      {pick.wallet && pick.walletSig && (
+        <div
+          className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] text-accent/90"
+          title={`This wallet signed "ProofCast commit:<hash>". Anyone can verify the signature against the public key — proof the pick was authored by this wallet and no one else.`}
+        >
+          <PenLine size={11} />
+          <span>signed by {pick.wallet.slice(0, 4)}…{pick.wallet.slice(-4)}</span>
+          <span className="text-dim">sig:{pick.walletSig.slice(0, 12)}…</span>
+        </div>
+      )}
     </div>
   );
 }

@@ -37,6 +37,11 @@ export type Pick = {
   onChainCheck?: { fixtureValid: boolean; valid: boolean; rootsPda: string | null } | null;
 };
 
+// A forecasting agent — human or autonomous. The brief admits AI agents as
+// entrants, so "analyst" and "agent" are the same actor here: whoever seals a
+// pick and stands behind it with a bond.
+export type AgentType = "human" | "autonomous";
+
 export type Analyst = {
   id: string;
   handle: string;
@@ -48,6 +53,8 @@ export type Analyst = {
   monthlyPriceUsdc: number;
   wallet: string;
   joined: string;
+  agentType?: AgentType;     // defaults to "human" when unset
+  strategy?: string;         // one line describing an autonomous agent's method
 };
 
 export function canonicalPayload(p: {

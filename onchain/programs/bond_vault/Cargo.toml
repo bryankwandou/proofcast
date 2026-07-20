@@ -1,0 +1,26 @@
+[package]
+name = "bond_vault"
+version = "0.1.0"
+description = "ProofCast Bond Vault — a trustless settlement engine that CPIs into TxLINE validate_stat"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "bond_vault"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build"]
+anchor-debug = []
+custom-heap = []
+custom-panic = []
+
+[dependencies]
+anchor-lang = "1.0.0"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }
