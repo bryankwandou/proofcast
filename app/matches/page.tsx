@@ -99,7 +99,7 @@ export default function MatchesPage() {
     <div className="mx-auto max-w-6xl px-5 py-16">
       <h1 className="font-display text-4xl tracking-tight sm:text-5xl">Matchday board</h1>
       <p className="mt-3 max-w-xl text-dim">
-        Live off the TxLINE feed{source === "txline" ? "" : " (demo data for now, while the feed is out of reach)"}.
+        Live off the TxLINE feed{source && source !== "txline" ? " (demo data for now, while the feed is out of reach)" : ""}.
         Make your call before the whistle. It is hashed on your device and anchored
         on-chain before anyone, us included, can read it.
       </p>
