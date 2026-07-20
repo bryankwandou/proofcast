@@ -99,9 +99,9 @@ export default function MatchesPage() {
     <div className="mx-auto max-w-6xl px-5 py-16">
       <h1 className="font-display text-4xl tracking-tight sm:text-5xl">Matchday board</h1>
       <p className="mt-3 max-w-xl text-dim">
-        Straight from the TxLINE feed{source === "txline" ? "" : " (demo data while the feed is unreachable)"}.
-        Call your play before the whistle — it is hashed on your device and anchored
-        on-chain before anyone, including us, can read it.
+        Live off the TxLINE feed{source === "txline" ? "" : " (demo data for now, while the feed is out of reach)"}.
+        Make your call before the whistle. It is hashed on your device and anchored
+        on-chain before anyone, us included, can read it.
       </p>
 
       <div className="mt-8">
@@ -116,7 +116,7 @@ export default function MatchesPage() {
         <div className="mt-16 rounded-2xl border hairline bg-raise/40 p-12 text-center">
           <p className="font-display text-2xl text-dim">The stadium is quiet</p>
           <p className="mt-2 text-sm text-dim">
-            No fixtures on the feed right now. The lights come back up on the next matchday.
+            Nothing on the feed at the moment. The lights come back up on the next matchday.
           </p>
         </div>
       ) : (
@@ -199,8 +199,8 @@ export default function MatchesPage() {
                     {active.homeTeam.name} vs {active.awayTeam.name}
                   </h3>
                   <p className="mt-1 text-sm text-dim">
-                    Hashed on this device with a private salt. Only the hash goes
-                    on-chain before the whistle — the play stays in your pocket.
+                    Hashed on this device with a private salt. Only the hash reaches
+                    the chain before the whistle. The call itself stays in your pocket.
                   </p>
                   <div className="mt-5 grid grid-cols-3 gap-2">
                     {(

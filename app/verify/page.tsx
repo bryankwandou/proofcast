@@ -92,12 +92,12 @@ export default function VerifyPage() {
         <ShieldCheck className="text-accent" size={36} /> Check it yourself
       </h1>
       <p className="mt-4 leading-relaxed text-dim">
-        Don&apos;t take our word for anything. Pick a fixture and this room will execute the{" "}
+        You do not have to take our word for any of this. Pick a fixture and the room runs the{" "}
         <span className="font-mono text-sm">validate_stat</span> instruction of TxLINE&apos;s
         program on Solana devnet with that fixture&apos;s Merkle proof material. The program walks
-        the proof up to the daily root already stored on-chain — if the data had been altered
-        anywhere between the feed and this page, the check would fail. The raw program logs are
-        shown below, unedited.
+        the proof up to the daily root already sitting on-chain. If the data were changed anywhere
+        between the feed and this page, the check falls over. The raw program logs sit below,
+        exactly as returned.
       </p>
 
       <div className="mt-8 flex flex-wrap items-end gap-3 rounded-2xl border hairline bg-raise p-5">

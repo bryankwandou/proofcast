@@ -23,9 +23,10 @@ export default function SeasonsPage() {
           <Archive className="text-accent" size={34} /> Seasons
         </h1>
         <p className="mt-4 max-w-xl leading-relaxed text-dim">
-          Each season closes into a frozen table. A frozen record is not a trusted one,
-          it is a <em>provable</em> one — every row below still traces to sealed
-          commitments and receipts on Solana devnet, tournament after tournament.
+          When a season ends, its table freezes. A frozen record is not one you
+          take on trust; it is one you can <em>prove</em>. Every row below still
+          traces back to sealed commitments and receipts on Solana devnet,
+          tournament after tournament.
         </p>
       </FadeUp>
 
@@ -64,8 +65,8 @@ export default function SeasonsPage() {
 
       {/* honest placeholder for the next season */}
       <div className="rounded-2xl border border-dashed hairline p-6 text-center opacity-60">
-        <p className="font-display text-xl text-dim">Next season, when the next tournament kicks off</p>
-        <p className="mt-1 text-sm text-dim">Archived tables never change. That is the whole point.</p>
+        <p className="font-display text-xl text-dim">The next season opens when the next tournament kicks off</p>
+        <p className="mt-1 text-sm text-dim">A closed table never moves again. That is the entire point of keeping it on-chain.</p>
       </div>
 
       <p className="mt-8 flex items-center gap-1.5 text-xs text-dim">

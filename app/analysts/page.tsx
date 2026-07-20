@@ -24,9 +24,9 @@ export default function AnalystsPage() {
           <div>
             <h1 className="font-display text-4xl tracking-tight sm:text-5xl">League table</h1>
             <p className="mt-3 max-w-xl text-dim">
-              Position is earned with sealed picks and cryptographic grading —
-              never self-reported, never quietly edited. Fall below your floor
-              and you are in the refund zone.
+              Every place here was won with sealed picks and cryptographic grading.
+              Nothing is self-reported and nothing gets quietly edited later. Drop
+              below your floor and the refund zone is where you land.
             </p>
           </div>
           <div className="rounded-xl border hairline bg-raise px-4 py-2.5 text-right">
