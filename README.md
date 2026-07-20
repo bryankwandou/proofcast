@@ -6,7 +6,7 @@ Built for the TxODDS World Cup hackathon, *Prediction Markets and Settlement* tr
 
 ## The problem
 
-Paid football picks are a large market run on unverifiable claims. Sellers delete losing calls, backdate winners, and screenshot slips after results are known. Rating platforms grade their own sellers, so the referee works for one of the teams. Honest analysts get priced like frauds because buyers cannot tell the difference.
+Paid football picks are a large market that runs on claims nobody can check. Sellers delete the calls that lost, backdate the ones that won, and screenshot slips only after the result is in. Rating platforms grade their own sellers, so the referee works for one of the teams. Buyers cannot tell an honest analyst from a lucky one, and honest analysts end up priced like frauds.
 
 ## How ProofCast removes the trust
 
@@ -14,7 +14,7 @@ Paid football picks are a large market run on unverifiable claims. Sellers delet
 2. **Grade by proof.** After the match, the pick is revealed, checked against its sealed hash, and scored against TxLINE score data. The settlement path pulls the Merkle stat-validation receipt (`GET /api/scores/stat-validation`) and records the `eventStatRoot` with the grade.
 3. **Bond the claim.** Each analyst locks a USDC bond behind an accuracy floor. If proof-graded accuracy breaks the floor, subscribers are refunded from the bond — enforced by settlement logic, not support tickets.
 
-No user ever wagers on a match. The funds at risk are analyst bonds and subscription fees — a service-level agreement, not a bet.
+No user ever wagers on a match. The only money at risk is the analyst's bond and the subscription fees: a service-level agreement, not a bet.
 
 ## TxLINE endpoints used
 

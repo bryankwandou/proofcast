@@ -6,6 +6,7 @@ import { ArrowRight, Lock, FileCheck2, Coins, ShieldCheck, ExternalLink } from "
 import { useEffect, useRef, useState } from "react";
 import { CountUp, FadeUp, Stagger, StaggerItem, TiltCard } from "./motion";
 import { Mark } from "./Logo";
+import { Link000 } from "./ui/skiper-ui/skiper40";
 import type { LeaderboardRow } from "@/lib/store";
 import type { Pick } from "@/lib/protocol";
 import type { StandingRow, Season } from "@/lib/season";
@@ -387,9 +388,9 @@ export function SeasonStandings({ table, season }: { table: StandingRow[]; seaso
             Clear the line at the top and you graduate to the paid tier; slip to the bottom and you drop.
           </p>
         </div>
-        <Link href="/seasons" className="text-sm text-accent hover:underline">
+        <Link000 href="/seasons" className="text-sm text-accent">
           Full table
-        </Link>
+        </Link000>
       </FadeUp>
 
       <div className="mt-8 overflow-hidden rounded-2xl border hairline bg-raise">
