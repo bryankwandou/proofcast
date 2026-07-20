@@ -122,6 +122,11 @@ export function standings(): StandingRow[] {
   });
 }
 
+// Bond Vault transactions executed on devnet, each linked from
+// docs/BOND-VAULT.md: two full settlement legs (open_bond, subscribe, settle
+// with the validate_stat CPI, claim) plus the earlier lifecycle receipts.
+export const SETTLEMENT_TXS = 11;
+
 // Season-wide totals for the landing stats band and the season header.
 export function seasonSummary() {
   const picks = allPicks();
@@ -134,6 +139,7 @@ export function seasonSummary() {
     picksTotal: picks.length,
     graded: graded.length,
     proofBacked,
+    settlementTxs: SETTLEMENT_TXS,
     sealedReal: sealed,
   };
 }

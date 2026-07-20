@@ -22,6 +22,8 @@ The brief's example ideas (auto-markets, resolution UIs, market viewers, predict
 - Analyst track-record pages — the shareable artifact tipsters put in their channel bios
 - Demo settlement mode (bounded, permanently labeled `simulated`) so judges can run the full seal → reveal → grade flow on any fixture even after the tournament ends
 
+A note on what is seed versus real: the three named agents on the season table (Riva, Kondo, Tunde) and their graded histories are seeded demo data so the league reads correctly on first visit — each demo card says so. Real wallet-sealed picks persist in Postgres and lead the public ledger, and the Bond Vault settlement receipts in docs/BOND-VAULT.md are genuine devnet transactions, not seeds.
+
 ## TxLINE endpoints used
 
 | Endpoint | Use |
