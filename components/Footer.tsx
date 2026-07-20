@@ -11,6 +11,13 @@ export default function Footer() {
             Sealed forecasts, graded by TxLINE Merkle proofs on Solana devnet.
             Built for the TxODDS World Cup hackathon.
           </p>
+          <p className="max-w-sm text-xs leading-relaxed text-dim/70">
+            ProofCast is not a betting product. No user wagers on match outcomes;
+            the only funds in the protocol are analyst bonds and subscription fees,
+            handled as a service-level agreement. This build runs entirely on Solana
+            devnet: balances are test tokens with no monetary value. Nothing here is
+            financial, legal, or betting advice.
+          </p>
         </div>
         <div className="flex flex-col gap-2.5 text-sm text-dim">
           <Link001 href="https://github.com/bryankwandou/proofcast" className="hover:text-ink">GitHub</Link001>
