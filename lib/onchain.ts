@@ -1,5 +1,5 @@
 import { AnchorProvider, BN, Program } from "@coral-xyz/anchor";
-import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
+import { ComputeBudgetProgram, Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import fs from "fs";
 import bs58 from "bs58";
 import idlJson from "./txline-idl.json";
@@ -127,7 +127,10 @@ export async function verifyStatOnChain(
 
   try {
     const conn = new Connection(RPC, "confirmed");
-    const pda = await findRootsPda(conn, v.ts);
+    // The proof binds to its 5-minute batch: the program derives the root slot
+    // from the batch's minTimestamp, not from the update's own ts.
+    const proofTs = v.summary.updateStats.minTimestamp;
+    const pda = await findRootsPda(conn, proofTs);
     if (!pda) return { ...base, error: "daily roots account not found on devnet for this date" };
     base.rootsPda = pda.toBase58();
 
@@ -165,7 +168,7 @@ export async function verifyStatOnChain(
 
     const ix = await program.methods
       .validateStat(
-        new BN(v.ts),
+        new BN(proofTs),
         summary,
         v.subTreeProof,
         v.mainTreeProof,
@@ -177,7 +180,10 @@ export async function verifyStatOnChain(
       .accounts({ dailyScoresMerkleRoots: pda })
       .instruction();
 
-    const tx = new Transaction().add(ix);
+    // The full Merkle walk needs ~211k compute units — just past the 200k default.
+    const tx = new Transaction()
+      .add(ComputeBudgetProgram.setComputeUnitLimit({ units: 1_400_000 }))
+      .add(ix);
     tx.feePayer = kp.publicKey;
     tx.recentBlockhash = (await conn.getLatestBlockhash("confirmed")).blockhash;
     const sim = await conn.simulateTransaction(tx);
