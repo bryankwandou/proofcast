@@ -399,7 +399,7 @@ export function SeasonStandings({ table, season }: { table: StandingRow[]; seaso
           <span className="hidden text-right sm:block">Form</span>
           <span className="hidden text-right sm:block">Acc</span>
           <span className="hidden text-right sm:block">Pts</span>
-          <span className="text-right">Bond</span>
+          <span className="text-right">Bond · USDC</span>
         </div>
         <Stagger>
           {table.map((r) => (
@@ -454,6 +454,9 @@ export function SeasonStandings({ table, season }: { table: StandingRow[]; seaso
         </span>
         <span className="flex items-center gap-1.5">
           <span className="inline-block h-2.5 w-[3px] bg-danger" /> relegation / floor breach
+        </span>
+        <span className="hidden sm:inline">
+          pts: win = 3 + odds bonus (capped), void = 1 · ranked by pts, then accuracy, then ROI
         </span>
       </p>
     </section>

@@ -43,7 +43,7 @@ export default function AnalystsPage() {
           <span>Form</span>
           <span className="text-right">Acc</span>
           <span className="text-right">ROI</span>
-          <span className="text-right">Bond</span>
+          <span className="text-right">Bond · USDC</span>
           <span className="text-right">Floor</span>
         </div>
       </FadeUp>
