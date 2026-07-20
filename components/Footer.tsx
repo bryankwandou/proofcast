@@ -14,7 +14,8 @@ export default function Footer() {
         <div className="flex flex-col gap-1 text-sm text-dim">
           <a className="hover:text-ink" href="https://github.com/bryankwandou/proofcast" target="_blank" rel="noreferrer">GitHub</a>
           <a className="hover:text-ink" href="https://txline.txodds.com/documentation/quickstart" target="_blank" rel="noreferrer">TxLINE docs</a>
-          <a className="hover:text-ink" href="https://explorer.solana.com/?cluster=devnet" target="_blank" rel="noreferrer">Solana Explorer</a>
+          <a className="hover:text-ink" href="https://explorer.solana.com/address/6XGwWjKTTkWD6JcJQXGUeDexJfrY3Nv2gM4yjJs5jSNi?cluster=devnet" target="_blank" rel="noreferrer">Bond Vault program (devnet)</a>
+          <a className="hover:text-ink" href="https://github.com/bryankwandou/proofcast/blob/main/docs/BOND-VAULT.md" target="_blank" rel="noreferrer">Settlement receipts</a>
         </div>
       </div>
     </footer>
