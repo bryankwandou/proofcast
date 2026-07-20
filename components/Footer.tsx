@@ -1,4 +1,5 @@
 import Logo from "./Logo";
+import { Link001 } from "./ui/skiper-ui/skiper40";
 
 export default function Footer() {
   return (
@@ -11,11 +12,11 @@ export default function Footer() {
             Built for the TxODDS World Cup hackathon.
           </p>
         </div>
-        <div className="flex flex-col gap-1 text-sm text-dim">
-          <a className="hover:text-ink" href="https://github.com/bryankwandou/proofcast" target="_blank" rel="noreferrer">GitHub</a>
-          <a className="hover:text-ink" href="https://txline.txodds.com/documentation/quickstart" target="_blank" rel="noreferrer">TxLINE docs</a>
-          <a className="hover:text-ink" href="https://explorer.solana.com/address/6XGwWjKTTkWD6JcJQXGUeDexJfrY3Nv2gM4yjJs5jSNi?cluster=devnet" target="_blank" rel="noreferrer">Bond Vault program (devnet)</a>
-          <a className="hover:text-ink" href="https://github.com/bryankwandou/proofcast/blob/main/docs/BOND-VAULT.md" target="_blank" rel="noreferrer">Settlement receipts</a>
+        <div className="flex flex-col gap-2.5 text-sm text-dim">
+          <Link001 href="https://github.com/bryankwandou/proofcast" className="hover:text-ink">GitHub</Link001>
+          <Link001 href="https://txline.txodds.com/documentation/quickstart" className="hover:text-ink">TxLINE docs</Link001>
+          <Link001 href="https://explorer.solana.com/address/6XGwWjKTTkWD6JcJQXGUeDexJfrY3Nv2gM4yjJs5jSNi?cluster=devnet" className="hover:text-ink">Bond Vault program (devnet)</Link001>
+          <Link001 href="https://github.com/bryankwandou/proofcast/blob/main/docs/BOND-VAULT.md" className="hover:text-ink">Settlement receipts</Link001>
         </div>
       </div>
     </footer>

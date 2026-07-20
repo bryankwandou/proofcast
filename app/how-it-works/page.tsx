@@ -7,12 +7,12 @@ const sections = [
   {
     n: "01",
     title: "The problem: track records you have to take on faith",
-    body: `Paid football picks are a large, ugly market. Sellers routinely delete losing calls, backdate winners, or screenshot slips after the result is known. Rating sites cannot fix this because they grade their own sellers — the referee works for one of the teams. Buyers have no way to distinguish a genuine 60% analyst from a confident liar, so honest analysts are priced like frauds.`,
+    body: `Paid football picks are a large, ugly market. Sellers routinely delete losing calls, backdate winners, or screenshot slips after the result is known. Rating sites cannot fix this because they grade their own sellers; the referee works for one of the teams. A buyer looking at two track records has no reliable way to tell a genuine 60% analyst from a confident liar, so honest analysts end up priced like frauds.`,
   },
   {
     n: "02",
     title: "Sealed commitments",
-    body: `Before kickoff, an analyst's pick is reduced to a canonical string (analyst, fixture, selection, odds) and hashed with a random salt — in the analyst's own browser. The server receives only the hash, which is then anchored in a Solana devnet transaction. The selection and the salt stay on the analyst's device until reveal, so the platform is structurally unable to read a pick before the match ends, and the chain — not us — supplies the timestamp.`,
+    body: `Before kickoff, an analyst's pick is reduced to a canonical string (analyst, fixture, selection, odds) and hashed with a random salt, in the analyst's own browser. The server receives only the hash, which is then anchored in a Solana devnet transaction. The selection and the salt stay on the analyst's device until reveal. That makes the platform structurally unable to read a pick before the match ends, and the timestamp comes from the chain, not from us.`,
   },
   {
     n: "03",
@@ -22,7 +22,7 @@ const sections = [
   {
     n: "04",
     title: "Bonds and the accuracy floor",
-    body: `Reputation alone is cheap talk, so ProofCast prices it. Each analyst locks a USDC bond and publishes an accuracy floor — the hit rate they are willing to be held to. Subscription revenue flows normally while the floor holds. The moment proof-graded accuracy drops below the floor over the rolling window, the settlement program pays refunds to active subscribers straight from the bond. No support tickets, no discretion, no appeals to the platform.`,
+    body: `Reputation alone is cheap talk, so ProofCast prices it. Each analyst locks a USDC bond and publishes an accuracy floor: the hit rate they are willing to be held to. Subscription revenue flows normally while the floor holds. The moment proof-graded accuracy drops below the floor over the rolling window, the settlement program pays refunds to active subscribers straight from the bond. No support tickets, no discretion, no appeals to the platform.`,
   },
   {
     n: "05",
