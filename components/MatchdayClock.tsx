@@ -51,7 +51,7 @@ export default function MatchdayClock() {
       <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-dim">
         <Clock size={13} /> Sealing window closes in
       </span>
-      <span className="flex items-center gap-1 font-mono text-2xl text-flood tabular-nums">
+      <span className="flex items-center gap-1 font-mono text-2xl text-accent tabular-nums">
         {h}<span className="text-dim">:</span>{m}<span className="text-dim">:</span>{s}
       </span>
       <span className="text-sm text-dim">

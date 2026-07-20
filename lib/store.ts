@@ -41,6 +41,8 @@ const seededAnalysts: Analyst[] = [
     monthlyPriceUsdc: 15,
     wallet: "TundeF5rW8qK1zX4cV7bN2mJ6hYgEs9dRaUpLo3iTxWc",
     joined: "2026-06-18",
+    agentType: "autonomous",
+    strategy: "Prices every fixture from a rolling xG model, seals a pick when its edge over the market clears 4%.",
   },
 ];
 

@@ -13,7 +13,7 @@ export default function TrophyCabinet({ picks }: { picks: Pick[] }) {
     <section>
       <div className="flex items-end justify-between">
         <h2 className="font-display flex items-center gap-2 text-2xl">
-          <Trophy size={20} className="text-flood" /> Trophy cabinet
+          <Trophy size={20} className="text-accent" /> Trophy cabinet
         </h2>
         <span className="font-mono text-sm text-dim">
           {earned}/{badges.length} earned
@@ -24,13 +24,13 @@ export default function TrophyCabinet({ picks }: { picks: Pick[] }) {
           <div
             key={b.id}
             className={`rounded-xl border p-4 ${
-              b.earned ? "floodlit border-flood/30 bg-raise" : "hairline bg-raise/40 opacity-60"
+              b.earned ? "floodlit border-accent/30 bg-raise" : "hairline bg-raise/40 opacity-60"
             }`}
           >
             <div className="flex items-center justify-between">
               <span
                 className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                  b.earned ? "bg-flood/15 text-flood" : "bg-chalk/40 text-dim"
+                  b.earned ? "bg-accent/15 text-accent" : "bg-chalk/40 text-dim"
                 }`}
               >
                 {b.earned ? <Trophy size={16} /> : <Lock size={14} />}

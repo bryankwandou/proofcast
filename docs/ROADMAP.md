@@ -40,13 +40,15 @@ The master execution checklist. Items marked `[x]` shipped in the hackathon buil
 - [x] Devnet receipt writer: commit / reveal / grade as signed memo transactions
 - [x] Stable protocol signer via keypair file, graceful degradation when unfunded
 - [x] Explorer links on every receipt in the UI
-- [ ] Anchor program: `register_analyst` (bond vault PDA, floor, price)
+- [x] Anchor `bond_vault` program: `open_bond` (bond PDA, accuracy floor, collateral escrow)
+- [x] Anchor `bond_vault` program: `subscribe` (subscription PDA, fee into escrow — native-SOL MVP)
+- [x] Anchor `bond_vault` program: `settle` with CPI into TxLINE `validate_stat` as the proof gate
+- [x] Anchor `bond_vault` program: `claim_refund` / `claim_earnings` payout legs
+- [x] Devnet deployment (`6XGwWjKTTkWD6JcJQXGUeDexJfrY3Nv2gM4yjJs5jSNi`) + live lifecycle script (`scripts/bond-lifecycle.mjs`)
 - [ ] Anchor program: `commit_pick` storing the hash on-chain natively
-- [ ] Anchor program: `reveal_and_grade` with CPI into TxLINE `validate_stat`
-- [ ] Anchor program: `claim_refund` paying subscribers from the bond when the floor breaks
-- [ ] Subscriber registry PDA + USDC (SPL) subscription payments
-- [ ] Keeper bot: watch SSE stream, submit grade transactions automatically
-- [ ] Devnet deployment + program tests (bankrun)
+- [ ] USDC (SPL) subscription payments on the same account layout
+- [ ] Keeper bot: watch SSE stream, submit settle transactions automatically
+- [ ] Program tests (bankrun)
 - [ ] Security review pass on the vault and refund paths
 
 ## Phase 5 — Product (hackathon MVP)
@@ -68,9 +70,9 @@ The master execution checklist. Items marked `[x]` shipped in the hackathon buil
 - [x] Public GitHub repository
 - [x] Vercel production deployment
 - [x] Technical documentation (endpoints used, architecture, feedback)
-- [ ] Demo video ≤5 min: problem → seal → grade → receipt → leaderboard
-- [ ] Superteam Earn submission form
-- [ ] TxLINE API feedback writeup
+- [x] Demo video ≤5 min: problem → seal → grade → receipt → leaderboard
+- [x] Superteam Earn submission form
+- [x] TxLINE API feedback writeup
 
 ## Phase 7 — Durable infrastructure
 - [ ] Postgres (Neon/Supabase) replacing the in-memory store

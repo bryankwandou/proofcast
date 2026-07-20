@@ -17,6 +17,7 @@ The brief's example ideas (auto-markets, resolution UIs, market viewers, predict
 - Commit-reveal pick lifecycle with devnet receipts for every step (memo transactions by a protocol signer)
 - **On-chain check gate**: at grading time, settlement executes the `validate_stat` instruction of TxLINE's devnet program with the fixture's real Merkle proof material (IDL fetched from the chain, `daily_scores_roots` PDA derived per epoch day); a grade is only marked proof-backed when the program itself verifies the proof against the on-chain daily root
 - **Public verification console at `/verify`**: anyone can pick any fixture and rerun the identical on-chain check; the program's unedited logs are the receipt
+- **Bond Vault settlement engine** (`onchain/programs/bond_vault`, Anchor): deployed on devnet at `6XGwWjKTTkWD6JcJQXGUeDexJfrY3Nv2gM4yjJs5jSNi` with `open_bond` and `subscribe` executed on-chain (Explorer receipts in docs/BOND-VAULT.md). Its `settle` instruction CPIs into TxLINE's `validate_stat`, so no fund-moving branch runs without a passing proof — demonstrated live by an unproven settle being rejected (`ProofRejected`, bond stays open). A proof-passing settle awaits live fixture stats; the claim legs then pay out with no further authority.
 - Proof-graded leaderboard: accuracy, flat-stake ROI, bond size, floor health
 - Analyst track-record pages — the shareable artifact tipsters put in their channel bios
 - Demo settlement mode (bounded, permanently labeled `simulated`) so judges can run the full seal → reveal → grade flow on any fixture even after the tournament ends
@@ -29,7 +30,7 @@ The brief's example ideas (auto-markets, resolution UIs, market viewers, predict
 | `/api/scores/snapshot/{id}` | score updates, final results |
 | `/api/odds/snapshot/{id}` | 1X2 prices captured at commit time |
 | `/api/scores/stat-validation` | Merkle proof material attached to grades |
-| Devnet program `6pW64gN1s2uqjHkn1unFeEjAwJkPGHoppGvS715wyP2J` | `validate_stat` executed today as the settlement gate and on `/verify`; CPI target for the Anchor bond-vault engine next (phase 4 of docs/ROADMAP.md) |
+| Devnet program `6pW64gN1s2uqjHkn1unFeEjAwJkPGHoppGvS715wyP2J` | `validate_stat` executed as the settlement gate at grading time, on `/verify`, and as the CPI target of our Bond Vault program's `settle` instruction (see docs/BOND-VAULT.md) |
 
 ## Demo video script (≤5 min)
 
@@ -37,7 +38,7 @@ The brief's example ideas (auto-markets, resolution UIs, market viewers, predict
 2. **0:40–1:30 Seal.** Open Matches (live TxLINE data), pick a fixture, seal a pick, show the sha256 commitment and the devnet receipt on Solana Explorer.
 3. **1:30–2:30 Grade.** Open the pick, run reveal + grade; show the hash check, final score from the feed, the Merkle root on the receipt timeline.
 4. **2:30–3:30 Trust market.** Leaderboard and an analyst page: proof-graded accuracy, USDC bond, accuracy floor, refund rule.
-5. **3:30–4:30 Architecture.** One diagram: TxLINE feed → settlement path → devnet receipts; where the Anchor program with validate_stat CPI lands next.
+5. **3:30–4:30 Architecture.** One diagram: TxLINE feed → settlement path → devnet receipts; the Bond Vault Anchor program whose `settle` CPIs into validate_stat as the proof gate.
 6. **4:30–5:00 Startup case.** The paid-picks market size, the free verified-record wedge, expansion past the World Cup.
 
 ## Feedback on the TxLINE API (for the submission form)

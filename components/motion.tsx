@@ -84,6 +84,25 @@ export function CountUp({
   return <span ref={ref} className={className}>0{suffix}</span>;
 }
 
+// Seal-stamp gesture: wraps the ProofCast Mark and fires the "wax stamp"
+// animation once, the first time it scrolls into view. The child should be a
+// <Mark/> (its inner .pc-mark-ring / .pc-mark-check are what animate).
+export function Stamp({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  return (
+    <span ref={ref} className={`pc-mark inline-flex ${inView ? "is-stamping" : ""} ${className}`}>
+      {children}
+    </span>
+  );
+}
+
 // Tilt-on-hover card used across the landing page.
 export function TiltCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (

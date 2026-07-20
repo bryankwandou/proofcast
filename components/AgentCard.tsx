@@ -129,7 +129,7 @@ export default function AgentCard({ analyst, picks }: { analyst: Analyst; picks:
               {current.name}
             </span>
             {streak >= 2 && (
-              <span className="inline-flex items-center gap-1 rounded-full border border-flood/40 px-2.5 py-0.5 font-mono text-[10px] text-flood">
+              <span className="inline-flex items-center gap-1 rounded-full border border-accent/40 px-2.5 py-0.5 font-mono text-[10px] text-accent">
                 <Flame size={11} /> {streak} in a row
               </span>
             )}
@@ -149,7 +149,7 @@ export default function AgentCard({ analyst, picks }: { analyst: Analyst; picks:
             </div>
             <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-chalk/40">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-accent to-flood"
+                className="h-full rounded-full bg-gradient-to-r from-accent-dim to-accent"
                 style={{ width: `${Math.round(pct * 100)}%` }}
               />
             </div>

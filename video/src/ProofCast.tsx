@@ -295,6 +295,91 @@ const CheckGate: React.FC = () => {
   );
 };
 
+// ── Scene 4c — The Bond Vault (on-chain settlement engine) ────────────────────
+const VaultCard: React.FC<{
+  tone: "neutral" | "held" | "breached";
+  icon: React.ReactNode;
+  title: string;
+  body: string;
+  delay: number;
+}> = ({ tone, icon, title, body, delay }) => {
+  const e = useEnter(delay);
+  const border = tone === "held" ? C.accentDim : tone === "breached" ? C.danger : C.line;
+  return (
+    <div
+      style={{
+        opacity: e,
+        transform: `translateY(${interpolate(e, [0, 1], [24, 0])}px)`,
+        flex: 1,
+        backgroundColor: C.raise,
+        border: `1px solid ${border}`,
+        borderRadius: 20,
+        padding: 30,
+      }}
+    >
+      {icon}
+      <div style={{ fontFamily: serif, fontSize: 30, color: C.ink, marginTop: 16 }}>{title}</div>
+      <div style={{ fontSize: 21, lineHeight: 1.45, color: C.dim, marginTop: 10 }}>{body}</div>
+    </div>
+  );
+};
+
+const BondVault: React.FC = () => {
+  const badge = useEnter(120);
+  return (
+    <Scene durationInFrames={210} style={{ alignItems: "flex-start" }}>
+      <Kicker delay={6}>A custom on-chain settlement engine</Kicker>
+      <Rise delay={12} style={{ marginBottom: 44 }}>
+        <h2 style={H(54)}>
+          The bond pays out by <span style={{ fontStyle: "italic", color: C.accent }}>proof</span>, never by us
+        </h2>
+      </Rise>
+      <div style={{ display: "flex", gap: 22, width: "100%" }}>
+        <VaultCard
+          delay={30}
+          tone="neutral"
+          icon={<Coins size={30} color={C.accent} />}
+          title="Escrow"
+          body="An agent locks a USDC bond in a program-owned PDA behind a public accuracy floor."
+        />
+        <VaultCard
+          delay={44}
+          tone="held"
+          icon={<Check size={30} color={C.accent} />}
+          title="Floor held"
+          body="settle runs a CPI into validate_stat. Proof passes above the floor — the agent claims the fees."
+        />
+        <VaultCard
+          delay={58}
+          tone="breached"
+          icon={<X size={30} color={C.danger} />}
+          title="Floor broken"
+          body="Proof lands below the floor — subscribers claim refunds from the bond. No ticket, no discretion."
+        />
+      </div>
+      <div
+        style={{
+          opacity: badge,
+          transform: `translateY(${interpolate(badge, [0, 1], [12, 0])}px)`,
+          marginTop: 30,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 10,
+          border: `1px solid ${C.accentDim}`,
+          backgroundColor: `${C.accent}14`,
+          borderRadius: 999,
+          padding: "12px 24px",
+          fontFamily: mono,
+          fontSize: 20,
+          color: C.accent,
+        }}
+      >
+        <ShieldCheck size={19} /> bond_vault · {truncMid(RECEIPTS.bondVault, 6, 6)} · devnet · funds move only on a passing proof
+      </div>
+    </Scene>
+  );
+};
+
 // ── Scene 5 — Leaderboard proof ───────────────────────────────────────────────
 const LbRow: React.FC<{ rank: string; name: string; handle: string; acc: number; bond: string; delay: number }> = ({
   rank,
@@ -386,7 +471,7 @@ const Cta: React.FC = () => {
       </Rise>
       <Rise delay={44} style={{ marginTop: 34 }}>
         <div style={{ fontFamily: mono, fontSize: 26, color: C.dim, textAlign: "center", lineHeight: 1.7 }}>
-          proofcast-theta.vercel.app
+          proofcast-app.vercel.app
           <br />
           <span style={{ color: C.accent }}>TxODDS World Cup · Prediction Markets & Settlement</span>
         </div>
@@ -419,12 +504,15 @@ export const ProofCastVideo: React.FC = () => {
           <CheckGate />
         </Sequence>
         <Sequence from={1020} durationInFrames={210} premountFor={30}>
+          <BondVault />
+        </Sequence>
+        <Sequence from={1230} durationInFrames={210} premountFor={30}>
           <Leaderboard />
         </Sequence>
-        <Sequence from={1230} durationInFrames={180} premountFor={30}>
+        <Sequence from={1440} durationInFrames={180} premountFor={30}>
           <Stats />
         </Sequence>
-        <Sequence from={1410} durationInFrames={150} premountFor={30}>
+        <Sequence from={1620} durationInFrames={150} premountFor={30}>
           <Cta />
         </Sequence>
       </AbsoluteFill>
@@ -432,4 +520,4 @@ export const ProofCastVideo: React.FC = () => {
   );
 };
 
-export const MASTER_DURATION = 1560; // 52s @ 30fps
+export const MASTER_DURATION = 1770; // 59s @ 30fps

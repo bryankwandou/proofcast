@@ -22,7 +22,7 @@ No user ever wagers on a match. The funds at risk are analyst bonds and subscrip
 - `GET /api/scores/snapshot/{fixtureId}` — score updates per fixture
 - `GET /api/odds/snapshot/{fixtureId}` — 1X2 price history (milliunit prices)
 - `GET /api/scores/stat-validation` — Merkle proof material for settlement receipts
-- Devnet validation program: `6pW64gN1s2uqjHkn1unFeEjAwJkPGHoppGvS715wyP2J` (validate_stat CPI target for the Anchor settlement engine on the roadmap)
+- Devnet validation program: `6pW64gN1s2uqjHkn1unFeEjAwJkPGHoppGvS715wyP2J` (`validate_stat`, executed at grading time, on `/verify`, and as the CPI target of the Bond Vault's `settle` instruction)
 
 ## Stack
 
@@ -44,5 +44,6 @@ Without a key the app falls back to demo fixtures, so every flow stays testable.
 - `lib/txline.ts` — TxLINE client (fixtures, scores, odds, auth)
 - `lib/solana.ts` — devnet receipt writer (commit / reveal / grade events)
 - `app/api/*` — fixtures proxy, pick lifecycle endpoints
+- `onchain/programs/bond_vault` — Anchor settlement engine on devnet (`6XGwWjKTTkWD6JcJQXGUeDexJfrY3Nv2gM4yjJs5jSNi`); `settle` CPIs into TxLINE `validate_stat` — see `docs/BOND-VAULT.md`
 - `docs/ROADMAP.md` — the full 0 → MVP → startup checklist
 - `docs/SUBMISSION.md` — hackathon submission notes and demo script

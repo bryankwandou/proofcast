@@ -31,6 +31,16 @@ export const Backdrop: React.FC<{ children: React.ReactNode; glow?: boolean }> =
           }}
         />
       )}
+      {/* Grain/dither overlay — breaks up 8-bit banding on the dark gradient
+          (the "pecah" look) and adds a subtle film texture. */}
+      <AbsoluteFill style={{ opacity: 0.06, mixBlendMode: "overlay", pointerEvents: "none" }}>
+        <svg width="100%" height="100%">
+          <filter id="pc-grain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#pc-grain)" />
+        </svg>
+      </AbsoluteFill>
       {children}
     </AbsoluteFill>
   );
