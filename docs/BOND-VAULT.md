@@ -49,6 +49,32 @@ open_bond ──▶ subscribe (×N) ──▶ settle ──▶ validate_stat CPI
 - Status is a strict state machine: a bond settles exactly once, refunds are one-shot per subscription (`refunded` guard).
 - Events (`BondOpened`, `Subscribed`, `BondSettled`, `Refunded`, `EarningsClaimed`) make every state change auditable from the chain.
 
+## Live devnet receipts — both settlement legs executed
+
+Run by [`scripts/bond-settle-live.mjs`](../scripts/bond-settle-live.mjs): the settle CPI carried the **real Merkle proof of the World Cup final (Spain vs Argentina, fixture 18257739)**, verified by TxLINE's `validate_stat` against the on-chain daily root before any funds moved.
+
+**Floor HELD** (settled 95% ≥ floor 90% → agent claims the fees):
+
+| Step | Transaction |
+|---|---|
+| `open_bond` (0.02 SOL collateral) | [5MucKJg9…uz6qz6](https://explorer.solana.com/tx/5MucKJg9mLoxn1SNm8mn2CBW66EjhX1WHCMcFPHWsDqh3vnncbvAoi4GGwLCywwBAooJ43ivc52qsqpSv5uz6qz6?cluster=devnet) |
+| `subscribe` (0.01 SOL fee) | [2x795z2F…k5uRM](https://explorer.solana.com/tx/2x795z2Feb8fY8KJ7k7ojFgz8UuUqbMcV49tKD4YEaQm9NkVhqSGt5Wy8RciBNiQzVGBAKCx3LPWoNJrFJzk5uRM?cluster=devnet) |
+| `settle` — CPI into `validate_stat`, proof passed | [5gmfUFov…EMCz9](https://explorer.solana.com/tx/5gmfUFovrtBHpLQkRUDA8tmwMqjWdJUR9bd5HoCpqK4PDsBkADCmAgad1yEvVtbptxFtLX6TKwNrAbca9jEEMCz9?cluster=devnet) |
+| `claim_earnings` — agent receives 0.01 SOL | [5bX4xcHb…C17K](https://explorer.solana.com/tx/5bX4xcHbunop3oohVnVwRAgscXx5GLrHNHeG3oBCTnZsyVnU8eM1uxwxBj37cvJphDXoGf9nwiSkZkPp6oD7C17K?cluster=devnet) |
+
+**Floor BREACHED** (settled 95% < floor 96% → subscriber refunded from collateral):
+
+| Step | Transaction |
+|---|---|
+| `open_bond` (0.01 SOL collateral) | [5VSSZKE7…xXbU9](https://explorer.solana.com/tx/5VSSZKE7hzbx15yjvp4Bct7JFrtHfYcrbycagXvwk2hWqwDUNDBKQNZN9f18rsmHhoZ8f4qiBxnt4SV8R59xXbU9?cluster=devnet) |
+| `subscribe` (0.005 SOL fee) | [23jC4iAc…UAE21](https://explorer.solana.com/tx/23jC4iAcQfp5sNzH8cnmEn14v6Y7Cg2voxkYZ3tBMCC53iiy8UtN3nHuCtC2eCQyatPUpFb9iwGnqwN8Rs8UAE21?cluster=devnet) |
+| `settle` — CPI into `validate_stat`, proof passed | [5GS6zjhr…M7oe2](https://explorer.solana.com/tx/5GS6zjhrCQc4uvDsFxu9hbZTThyA9RoK1poT8gyNsSKTg3vhWctdtZPDjKManLfqVma28nuGawUnDpHEuWfM7oe2?cluster=devnet) |
+| `claim_refund` — subscriber receives 0.015 SOL (fee + collateral share) | [4BeCGtCa…HQMXv](https://explorer.solana.com/tx/4BeCGtCaVU4H1xaWe2dtyPrgsXobrGjtQotyY1nBoyus5kCfo53ZGVdEcVN84eJFE5hZc23hiq2ywoJr8saHQMXv?cluster=devnet) |
+
+An earlier settle attempt with an empty proof was rejected by the gate (`InstructionFallbackNotFound` from the TxLINE program at preflight) and no funds moved — the same instruction that pays out refuses to run without a passing proof.
+
+Proof-material notes (learned the hard way, useful for anyone integrating): the `validate_stat` seed timestamp must be the proof batch's `updateStats.minTimestamp` (each proof binds to a 5-minute batch), and the full Merkle walk consumes ~211k compute units, so the transaction needs a `SetComputeUnitLimit` above the 200k default.
+
 ## Client surface
 
 [`lib/bondvault.ts`](../lib/bondvault.ts) exports the program ID, PDA derivations, and status decoding shared by the app and the keeper. The IDL lives at [`lib/bond-vault-idl.json`](../lib/bond-vault-idl.json).
