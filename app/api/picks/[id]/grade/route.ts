@@ -79,9 +79,18 @@ export async function POST(
   if (!simulated) {
     try {
       const [{ verifyStatOnChain, fetchValidation }] = await Promise.all([import("@/lib/onchain")]);
-      const v = await fetchValidation(pick.fixtureId, 1, 1);
+      // Prove against the newest score update — it carries the fullest stat
+      // tree. Early seqs are pre-match snapshots whose stat root is zero.
+      let seq = 1;
+      try {
+        const { getScoresFor } = await import("@/lib/txline");
+        const updates = await getScoresFor(pick.fixtureId);
+        const last = updates[updates.length - 1] as { Seq?: number } | undefined;
+        if (last?.Seq !== undefined) seq = last.Seq;
+      } catch { /* keep seq 1 */ }
+      const v = await fetchValidation(pick.fixtureId, seq, 1);
       proofRoot = v ? Buffer.from(v.eventStatRoot).toString("hex") : null;
-      const check = await verifyStatOnChain(pick.fixtureId, 1, 1);
+      const check = await verifyStatOnChain(pick.fixtureId, seq, 1);
       onChainCheck = { fixtureValid: check.fixtureValid, valid: check.valid, rootsPda: check.rootsPda };
     } catch {
       onChainCheck = null;

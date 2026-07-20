@@ -27,7 +27,7 @@ const sections = [
   {
     n: "05",
     title: "What is on devnet today, and what comes next",
-    body: `The build you are looking at anchors commit, reveal, and grade events as signed devnet transactions, executes TxLINE's validate_stat program as a settlement gate on every feed-backed grade, and exposes a public verification console where anyone can rerun that check. The remaining milestone — an Anchor program holding the bond vault PDA and paying refunds through a validate_stat CPI, so the money path is as trustless as the grading path — is specified in docs/ROADMAP.md. Nothing in the product depends on trusting ProofCast: that is the point.`,
+    body: `The build you are looking at anchors commit, reveal, and grade events as signed devnet transactions, executes TxLINE's validate_stat program as a settlement gate on every feed-backed grade, and exposes a public verification console where anyone can rerun that check. The money path is on-chain too: the Bond Vault Anchor program at 6XGwWjKTTkWD6JcJQXGUeDexJfrY3Nv2gM4yjJs5jSNi holds collateral and fees in a PDA escrow, and its settle instruction performs a CPI into validate_stat — both settlement legs (agent earns on a held floor, subscribers refunded on a breach) have executed on devnet, gated by a real Merkle proof; the receipts are in docs/BOND-VAULT.md in the repo. What comes next — USDC (SPL) escrow, a keeper bot on the score stream, and program tests — is sequenced in docs/ROADMAP.md. Nothing in the product depends on trusting ProofCast: that is the point.`,
   },
 ];
 
