@@ -322,16 +322,16 @@ export function HowItWorks() {
 export function StatsBand({
   picksTotal,
   graded,
-  proofBacked,
+  settlementTxs,
 }: {
   picksTotal: number;
   graded: number;
-  proofBacked: number;
+  settlementTxs: number;
 }) {
   const stats = [
     { label: "Forecasts on the public ledger", value: picksTotal, suffix: "" },
     { label: "Picks graded against the feed", value: graded, suffix: "" },
-    { label: "Grades backed by an on-chain proof", value: proofBacked, suffix: "" },
+    { label: "Settlement transactions on devnet", value: settlementTxs, suffix: "" },
     { label: "Records the platform can edit", value: 0, suffix: "" },
   ];
   return (

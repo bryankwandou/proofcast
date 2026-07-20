@@ -22,7 +22,7 @@ export default function Home() {
       <StatsBand
         picksTotal={summary.picksTotal}
         graded={summary.graded}
-        proofBacked={summary.proofBacked}
+        settlementTxs={summary.settlementTxs}
       />
       <SeasonStandings table={table} season={ACTIVE_SEASON} />
       <ClosingCta />
