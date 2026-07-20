@@ -53,7 +53,7 @@ export default async function ProofCardPage({ params }: { params: Promise<{ hand
 
         {/* identity */}
         <div className="mt-6 flex items-center gap-3">
-          <Crest analyst={analyst} size={44} />
+          <Crest wallet={analyst.wallet} size={44} />
           <div>
             <p className="font-display text-xl leading-tight">{analyst.name}</p>
             <p className="font-mono text-xs text-dim">@{analyst.handle}</p>

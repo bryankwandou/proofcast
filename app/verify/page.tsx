@@ -33,8 +33,11 @@ const STATS = [
   { key: 2, label: "Goals — away" },
 ];
 
+const TXLINE_PROGRAM = "6pW64gN1s2uqjHkn1unFeEjAwJkPGHoppGvS715wyP2J";
+
 export default function VerifyPage() {
   const [matches, setMatches] = useState<Match[]>([]);
+  const [archive, setArchive] = useState<{ id: string; label: string }[]>([]);
   const [fixtureId, setFixtureId] = useState("");
   const [statKey, setStatKey] = useState(1);
   const [running, setRunning] = useState(false);
@@ -46,10 +49,28 @@ export default function VerifyPage() {
       .then((d) => {
         const m: Match[] = d.matches ?? [];
         setMatches(m);
-        if (m.length && !fixtureId) setFixtureId(m[0].id);
+        setFixtureId((cur) => cur || (m[0]?.id ?? ""));
       })
       .catch(() => setMatches([]));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Tournament archive: fixtures our picks were graded against. The feed
+    // rotates past finished competitions, but their Merkle roots stay on-chain
+    // forever — these are the fixtures a proof can still be replayed for.
+    fetch("/api/picks")
+      .then((r) => r.json())
+      .then((d) => {
+        const seen = new Set<string>();
+        const arch: { id: string; label: string }[] = [];
+        for (const p of d.picks ?? []) {
+          const id = String(p.fixtureId ?? "");
+          if (!/^\d+$/.test(id) || seen.has(id)) continue;
+          seen.add(id);
+          arch.push({ id, label: p.fixtureLabel ?? id });
+        }
+        setArchive(arch);
+        // Default to the archive: those fixtures have proofs that pass today.
+        if (arch.length) setFixtureId(arch[0].id);
+      })
+      .catch(() => setArchive([]));
   }, []);
 
   async function run() {
@@ -87,12 +108,25 @@ export default function VerifyPage() {
             onChange={(e) => setFixtureId(e.target.value)}
             className="rounded-lg border hairline bg-bg px-3 py-2.5 text-ink outline-none focus:border-accent/60"
           >
-            {matches.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.homeTeam.name} vs {m.awayTeam.name} ({m.status})
-              </option>
-            ))}
-            {matches.length === 0 && <option value="">loading feed…</option>}
+            {archive.length > 0 && (
+              <optgroup label="Tournament archive (graded on-chain)">
+                {archive.map((f) => (
+                  <option key={`a-${f.id}`} value={f.id}>
+                    {f.label}
+                  </option>
+                ))}
+              </optgroup>
+            )}
+            {matches.length > 0 && (
+              <optgroup label="Live feed">
+                {matches.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.homeTeam.name} vs {m.awayTeam.name} ({m.status})
+                  </option>
+                ))}
+              </optgroup>
+            )}
+            {matches.length === 0 && archive.length === 0 && <option value="">loading feed…</option>}
           </select>
         </label>
         <label className="flex flex-col gap-1.5 text-sm text-dim">
@@ -117,6 +151,18 @@ export default function VerifyPage() {
           {running && <LoaderCircle className="animate-spin" size={14} />}
           {running ? "Reviewing on devnet…" : "Send it to VAR"}
         </button>
+        <p className="w-full font-mono text-[11px] text-dim">
+          program under review:{" "}
+          <a
+            className="text-accent hover:underline"
+            href={`https://explorer.solana.com/address/${TXLINE_PROGRAM}?cluster=devnet`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {TXLINE_PROGRAM} <ExternalLink className="inline" size={10} />
+          </a>{" "}
+          (TxLINE devnet)
+        </p>
       </div>
 
       {result && (
