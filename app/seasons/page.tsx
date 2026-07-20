@@ -36,10 +36,17 @@ export default function SeasonsPage() {
             <div>
               <div className="flex items-center gap-2.5">
                 <h2 className="font-display text-2xl">{ACTIVE_SEASON.name}</h2>
-                <span className="flex items-center gap-1.5 rounded-full border border-danger/40 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-danger">
-                  <span className="live-dot inline-block h-1.5 w-1.5 rounded-full bg-danger" />
-                  in play
-                </span>
+                {ACTIVE_SEASON.status === "closed" ? (
+                  <span className="flex items-center gap-1.5 rounded-full border border-accent/40 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-accent">
+                    <Archive size={11} />
+                    final — table frozen
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1.5 rounded-full border border-danger/40 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-danger">
+                    <span className="live-dot inline-block h-1.5 w-1.5 rounded-full bg-danger" />
+                    in play
+                  </span>
+                )}
               </div>
               <p className="mt-1 font-mono text-xs text-dim">{ACTIVE_SEASON.window}</p>
             </div>
