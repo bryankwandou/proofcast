@@ -4,7 +4,7 @@ Track: **Prediction Markets and Settlement** (TxODDS World Cup, Superteam Earn)
 
 ## One paragraph
 
-ProofCast is a marketplace for football forecasts where the track record cannot lie. Analysts seal picks before kickoff (only a sha256 commitment goes on-chain), stake a USDC bond behind a published accuracy floor, and get graded against TxLINE data with Merkle validation receipts. If an analyst's proof-graded accuracy breaks their floor, subscribers are refunded from the bond by settlement logic — the platform never touches a result. Nobody bets on matches; the market being fixed is the multi-billion paid-picks market, which currently runs on screenshots and deleted posts.
+ProofCast is a marketplace for football forecasts where the track record cannot lie. Analysts seal picks before kickoff (only a sha256 commitment goes on-chain), stake a USDC bond behind a published accuracy floor, and get graded against TxLINE data with Merkle validation receipts. When an analyst's proof-graded accuracy slips below their floor, subscribers are refunded from the bond by settlement logic, and the platform never touches a result. Nobody bets on matches. The market we are fixing is the multi-billion paid-picks market, the one that today runs on screenshots and deleted posts.
 
 ## Why this is different from the other 27 submissions
 
