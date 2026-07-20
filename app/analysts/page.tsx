@@ -70,7 +70,12 @@ export default function AnalystsPage() {
                     <span className="block truncate font-medium">
                       {r.analyst.name} <span className="text-dim">@{r.analyst.handle}</span>
                     </span>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-accent">{rank}</span>
+                    <span
+                      className="font-mono text-[10px] uppercase tracking-wider text-accent"
+                      title="Career tier, earned from graded picks: Scout → Analyst → Chief Scout → Director → Gaffer"
+                    >
+                      {rank}
+                    </span>
                   </span>
                 </span>
                 <span className="hidden sm:block">
@@ -99,6 +104,8 @@ export default function AnalystsPage() {
       <p className="mt-6 text-xs text-dim">
         Every number traces to a sealed commitment and a devnet receipt. The
         refund zone is not a metaphor: below the floor, the bond pays subscribers.
+        The tag under each name is a career tier earned from graded picks —
+        Scout → Analyst → Chief Scout → Director → Gaffer.
       </p>
     </div>
   );

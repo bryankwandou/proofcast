@@ -19,8 +19,8 @@ export type Season = {
 export const ACTIVE_SEASON: Season = {
   id: "wc26-group",
   name: "World Cup 2026 · Group Stage",
-  window: "Matchday 1 → Matchday 3",
-  status: "live",
+  window: "Matchday 1 → Matchday 3 · final 19 Jul 2026",
+  status: "closed",
 };
 
 // League points from graded picks only: a correct call is worth more when the
