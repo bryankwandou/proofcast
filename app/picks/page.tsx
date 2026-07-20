@@ -19,13 +19,13 @@ export default async function PicksPage() {
       <FadeUp>
         <h1 className="font-display text-4xl tracking-tight sm:text-5xl">All picks</h1>
         <p className="mt-3 max-w-xl text-dim">
-          The full public ledger: sealed commitments, revealed selections, and
-          proof-graded results, newest first.
+          One public ledger, newest first: what was sealed, what got revealed,
+          and how each call graded out.
           {realCount > 0 && (
             <>
               {" "}
-              <span className="text-accent">{realCount} wallet-signed</span> and live on-chain;
-              the rest is seeded demo history, labelled as such.
+              <span className="text-accent">{realCount} are wallet-signed</span> and live on-chain.
+              The rest is seeded demo history, and it says so on each card.
             </>
           )}
         </p>
