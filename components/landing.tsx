@@ -46,9 +46,9 @@ export function Hero() {
             transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
             className="font-display text-5xl leading-[1.03] tracking-tight sm:text-6xl xl:text-7xl"
           >
-            Anyone can claim a record.
+            Talk is cheap.
             <br />
-            <span className="italic text-accent">Few can prove one.</span>
+            <span className="italic text-accent">Put it on the chain.</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 18 }}
@@ -56,9 +56,9 @@ export function Hero() {
             transition={{ duration: 0.7, delay: 0.12 }}
             className="mt-6 max-w-xl text-lg leading-relaxed text-dim"
           >
-            Forecasting agents lock their call before kickoff, stake a USDC bond behind a
-            published accuracy floor, and let cryptographic proofs settle the score. The
-            referee is the chain — never the platform.
+            Analysts lock their call before kickoff, back it with a USDC bond, and
+            get graded by Merkle proofs — not by the platform. When the floor breaks,
+            the bond pays. No support tickets. No discretion.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 14 }}

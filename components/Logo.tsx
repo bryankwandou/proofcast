@@ -1,8 +1,9 @@
-// ProofCast mark — "Seal-Check". One idea: a notched wax seal whose interior
-// is a checkmark. A stamp that means verified. It reads at 16px and scales to a
-// hero. The analyst crests keep the shield shape (that is identity, not brand);
-// this seal is the protocol's own mark.
+// ProofCast mark — notched seal ring with a checkmark inside.
+// Three-layer depth: outer dashed ring (the stamp edge), a solid inner ring,
+// and the check. A gradient arc behind the check adds dimension without
+// introducing a second brand color.
 export function Mark({ size = 28 }: { size?: number }) {
+  const id = `pc-g-${size}`;
   return (
     <svg
       width={size}
@@ -12,7 +13,16 @@ export function Mark({ size = 28 }: { size?: number }) {
       aria-hidden
       className="pc-mark"
     >
-      {/* notched seal ring — the wax stamp edge */}
+      <defs>
+        {/* radial glow behind the check — accent fading to transparent */}
+        <radialGradient id={id} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* glow disc */}
+      <circle cx="24" cy="24" r="18" fill={`url(#${id})`} />
+      {/* outer notched stamp ring */}
       <circle
         cx="24"
         cy="24"
@@ -22,13 +32,13 @@ export function Mark({ size = 28 }: { size?: number }) {
         strokeDasharray="1.6 3.4"
         className="pc-mark-ring"
       />
-      {/* inner containment ring */}
-      <circle cx="24" cy="24" r="12.5" stroke="var(--accent)" strokeWidth="2" opacity="0.55" />
-      {/* the seal: a checkmark struck through the center */}
+      {/* inner solid ring — slightly thicker for depth */}
+      <circle cx="24" cy="24" r="12.5" stroke="var(--accent)" strokeWidth="2.2" opacity="0.6" />
+      {/* the check — slightly bolder */}
       <path
-        d="M18 24.5 L22.5 29 L31 19.5"
+        d="M17.5 24.5 L22.5 29.5 L31.5 19"
         stroke="var(--accent)"
-        strokeWidth="3.4"
+        strokeWidth="3.6"
         strokeLinecap="round"
         strokeLinejoin="round"
         className="pc-mark-check"
